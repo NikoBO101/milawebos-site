@@ -1,11 +1,13 @@
 {
-  "latest": "1.8.0",
+  "latest": "1.8.1",
   "files": [
     {
-      "version": "1.8.0",
-      "url": "https://твій_нік.github.io/milawebos-site/updates/MilaWEBOS_update_v1.8.0.mmur",
-      "sha256": "пізніше_вставиш_хеш",
-      "notes": "Онлайн-оновлення + офлайн SW"
+      "version": "1.8.1",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v1.8.1.mmur",
+      "sha256": "",
+      "notes": "Гарячий фікс: Chart.js + fallback showDirectoryPicker + дефолт URL"
     }
   ]
 }
+
+
