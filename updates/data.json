@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1001,
+    "name": "Демо-клієнт",
+    "phone": "+380000000001",
+    "email": "demo@example.com",
+    "status": "Новий",
+    "tags": "demo,import",
+    "comment": "Приклад із data.json",
+    "date": "2025-11-03T10:00:00Z",
+    "updatedAt": "2025-11-03T10:00:00Z"
+  }
+]
