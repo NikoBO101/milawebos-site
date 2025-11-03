@@ -6,7 +6,6 @@
   <meta name="app-version" content="1.6.0" />
   <title>MilaWEBOS CRM</title>
 
-  <!-- Базові стилі (легкі, щоб усе було охайно до застосування патчів) -->
   <style>
     :root{
       --bg:#0f1426; --card:#141a33; --text:#e7ecff; --muted:#a9b3d9;
@@ -40,11 +39,36 @@
     .hidden{display:none!important}
   </style>
 
-  <!-- Chart.js потрібен статистиці та частині патчів -->
+  <!-- Chart.js для статистики -->
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Вбудований блок для персист-патчів (аплікація його читає) -->
+  <!-- Блок для персист-патчів -->
   <script id="applied-patches" type="application/json">{"applied":[]}</script>
+
+  <!-- SAFE RESET: одноразово чистимо SW/кеш/пін версії, щоб зняти залипання 1.6 -->
+  <script>
+    (async function SAFE_RESET_ONCE(){
+      try{
+        if(!localStorage.getItem('mw_safe_reset_done')){
+          // 1) прибираємо пін старої версії
+          localStorage.removeItem('appVersionPinned');
+          // 2) чистимо caches
+          if (window.caches) {
+            const keys = await caches.keys();
+            for (const k of keys) { await caches.delete(k); }
+          }
+          // 3) знімаємо всі Service Workers
+          if (navigator.serviceWorker) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            for (const r of regs) { await r.unregister(); }
+          }
+          localStorage.setItem('mw_safe_reset_done','1');
+          // перезавантаження — вже без старого кешу/піну
+          location.reload();
+        }
+      }catch(e){}
+    })();
+  </script>
 </head>
 <body>
   <div class="container">
@@ -60,13 +84,12 @@
       </div>
     </header>
 
-    <!-- СЕКЦІЯ: Форма/Ліди -->
+    <!-- Форма/Ліди -->
     <section id="formSection" class="section active">
       <div class="grid">
         <div class="card" id="crmOptionsCard">
           <h2>Опції CRM</h2>
           <div class="row" style="flex-wrap:wrap;gap:6px">
-            <!-- Кнопки додаються патчами; залишимо базові-заглушки -->
             <button class="btn" id="bulkInProgressBtn">Масово: «В обробці»</button>
           </div>
         </div>
@@ -79,51 +102,28 @@
       <div class="card" style="margin-top:12px">
         <h2>Новий лід</h2>
         <form id="leadForm" class="grid">
-          <div>
-            <label>Імʼя</label>
-            <input id="name" placeholder="Імʼя" />
+          <div><label>Імʼя</label><input id="name" /></div>
+          <div><label>Телефон</label><input id="phone" placeholder="+380..." /></div>
+          <div><label>Email</label><input id="email" type="email" /></div>
+          <div><label>Статус</label>
+            <select id="status"><option>Новий</option><option>В обробці</option><option>Закритий</option><option>Відхилений</option></select>
           </div>
-          <div>
-            <label>Телефон</label>
-            <input id="phone" placeholder="+380..." />
-          </div>
-          <div>
-            <label>Email</label>
-            <input id="email" type="email" placeholder="email@example.com" />
-          </div>
-          <div>
-            <label>Статус</label>
-            <select id="status">
-              <option>Новий</option><option>В обробці</option>
-              <option>Закритий</option><option>Відхилений</option>
-            </select>
-          </div>
-          <div style="grid-column:1 / -1">
-            <label>Теги</label>
-            <input id="tags" placeholder="facebook, гарячий" />
-          </div>
-          <div style="grid-column:1 / -1">
-            <label>Коментар</label>
-            <textarea id="comment" rows="3"></textarea>
-          </div>
-          <div style="grid-column:1 / -1">
-            <button class="btn" type="submit">Відправити</button>
-          </div>
+          <div style="grid-column:1 / -1"><label>Теги</label><input id="tags" placeholder="facebook, гарячий" /></div>
+          <div style="grid-column:1 / -1"><label>Коментар</label><textarea id="comment" rows="3"></textarea></div>
+          <div style="grid-column:1 / -1"><button class="btn" type="submit">Відправити</button></div>
         </form>
       </div>
 
       <div class="card table-wrap" style="margin-top:12px">
         <h2>Ліди</h2>
         <table id="leadsTable">
-          <thead>
-            <tr><th></th><th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Теги</th><th>Коментар</th><th>Дії</th></tr>
-          </thead>
+          <thead><tr><th></th><th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Теги</th><th>Коментар</th><th>Дії</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
 
-    <!-- СЕКЦІЯ: Налаштування -->
+    <!-- Налаштування -->
     <section id="settingsSection" class="section">
       <div class="card">
         <h2>Менеджер оновлень (.mmur)</h2>
@@ -140,7 +140,7 @@
         <div class="grid">
           <div>
             <label>URL індексу</label>
-            <input id="updIndexUrl" placeholder="https://<твій_нік>.github.io/milawebos-site/updates/index.json" />
+            <input id="updIndexUrl" placeholder="https://nikobo101.github.io/milawebos-site/updates/index.json" />
           </div>
           <div class="row" style="align-items:end">
             <button class="btn" id="updTestBtn">Перевірити з’єднання</button>
@@ -166,206 +166,147 @@
       </div>
     </section>
 
-    <!-- СЕКЦІЯ: Розширені -->
+    <!-- Розширені -->
     <section id="advancedFeaturesSection" class="section">
       <div class="grid">
-        <div class="card">
-          <h2>Статистика</h2>
-          <canvas id="chartStatusPie" height="140"></canvas>
-        </div>
-        <div class="card">
-          <h2>Динаміка по днях</h2>
-          <canvas id="chartByDay" height="140"></canvas>
-        </div>
+        <div class="card"><h2>Статистика</h2><canvas id="chartStatusPie" height="140"></canvas></div>
+        <div class="card"><h2>Динаміка по днях</h2><canvas id="chartByDay" height="140"></canvas></div>
       </div>
     </section>
   </div>
 
-  <!-- Toast -->
   <div id="toast" class="hidden">OK</div>
 
   <script>
-    // ---------------- Навігація по секціях
-    const sections = {
-      tabForm: 'formSection',
-      tabSettings: 'settingsSection',
-      tabAdvanced: 'advancedFeaturesSection'
-    };
-    Object.keys(sections).forEach(btnId=>{
-      const btn=document.getElementById(btnId);
-      btn?.addEventListener('click', ()=>{
-        document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  (function(){
+    const $=s=>document.querySelector(s);
+    const $$=s=>Array.from(document.querySelectorAll(s));
+    const toast=t=>{const el=$('#toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2000);};
+
+    // ---------- Навігація між вкладками
+    const sections={tabForm:'formSection',tabSettings:'settingsSection',tabAdvanced:'advancedFeaturesSection'};
+    Object.keys(sections).forEach(id=>{
+      const btn=$('#'+id);
+      btn?.addEventListener('click',()=>{
+        $$('.tabs button').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-        document.getElementById(sections[btnId])?.classList.add('active');
+        $$('.section').forEach(s=>s.classList.remove('active'));
+        $('#'+sections[id])?.classList.add('active');
       });
     });
 
-    // ---------------- Тема (light/dark)
-    const themeBtn=document.getElementById('themeToggleBtn');
-    const savedTheme=localStorage.getItem('theme')||'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeBtn?.addEventListener('click', ()=>{
-      const cur=document.documentElement.getAttribute('data-theme');
-      const next=cur==='light'?'dark':'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-    });
+    // ---------- Тема
+    try{
+      const themeBtn=$('#themeToggleBtn');
+      const savedTheme=localStorage.getItem('theme')||'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      themeBtn?.addEventListener('click',()=>{
+        const cur=document.documentElement.getAttribute('data-theme');
+        const next=cur==='light'?'dark':'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    }catch{}
 
-    // ---------------- Реєстрація Service Worker (офлайн)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(()=>{});
-    }
+    // ---------- SW офлайн (після reset він зареєструється заново)
+    try{ if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js').catch(()=>{}); } }catch{}
 
-    // ---------------- Примітивна логіка для лід-форми/таблиці (до патчів)
-    const toast = (t)=>{ const el=document.getElementById('toast'); el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),2000); };
+    // ---------- Базова робота з лідами (до патчів)
     const leadsKey='leads';
-    function loadLeads(){ try{ return JSON.parse(localStorage.getItem(leadsKey)||'[]'); }catch(e){ return []; } }
-    function saveLeads(arr){ localStorage.setItem(leadsKey, JSON.stringify(arr)); }
+    const loadLeads=()=>{ try{return JSON.parse(localStorage.getItem(leadsKey)||'[]');}catch{return[]} };
+    const saveLeads=a=>localStorage.setItem(leadsKey, JSON.stringify(a));
     function renderTable(){
-      const tb=document.querySelector('#leadsTable tbody');
-      const leads=loadLeads();
-      tb.innerHTML='';
-      leads.forEach(l=>{
+      const tb=$('#leadsTable tbody'); tb.innerHTML='';
+      loadLeads().forEach(l=>{
         const tr=document.createElement('tr');
-        tr.innerHTML = \`
-          <td><input type="checkbox" class="sel" data-id="\${l.id}"></td>
-          <td>\${l.id}</td><td>\${l.name||''}</td><td>\${l.phone||''}</td>
-          <td>\${l.email||''}</td><td>\${l.status||''}</td>
-          <td>\${l.tags||''}</td><td>\${l.comment||''}</td><td></td>\`;
+        tr.innerHTML=`<td><input type="checkbox" class="sel" data-id="${l.id}"></td>
+        <td>${l.id}</td><td>${l.name||''}</td><td>${l.phone||''}</td>
+        <td>${l.email||''}</td><td>${l.status||''}</td>
+        <td>${l.tags||''}</td><td>${l.comment||''}</td><td></td>`;
         tb.appendChild(tr);
       });
     }
-    document.getElementById('leadForm')?.addEventListener('submit', (e)=>{
+    $('#leadForm')?.addEventListener('submit',(e)=>{
       e.preventDefault();
       const leads=loadLeads();
-      const id = Date.now();
-      const get=v=>document.getElementById(v).value.trim();
-      leads.push({id, name:get('name'), phone:get('phone'), email:get('email'),
-                  status:document.getElementById('status').value, tags:get('tags'), comment:get('comment'),
-                  date: new Date().toLocaleDateString('uk-UA')});
-      saveLeads(leads); renderTable(); toast('Лід додано');
-      e.target.reset();
+      const id=Date.now(); const v=id=>$('#'+id).value.trim();
+      leads.push({id,name:v('name'),phone:v('phone'),email:v('email'),status:$('#status').value,tags:v('tags'),comment:v('comment'),date:new Date().toLocaleDateString('uk-UA')});
+      saveLeads(leads); renderTable(); toast('Лід додано'); e.target.reset();
     });
-    document.getElementById('bulkInProgressBtn')?.addEventListener('click', ()=>{
+    $('#bulkInProgressBtn')?.addEventListener('click',()=>{
       const leads=loadLeads();
-      document.querySelectorAll('#leadsTable tbody .sel:checked').forEach(cb=>{
-        const id=Number(cb.dataset.id);
-        const i=leads.findIndex(l=>l.id===id);
+      $$('#leadsTable tbody .sel:checked').forEach(cb=>{
+        const id=Number(cb.dataset.id); const i=leads.findIndex(l=>l.id===id);
         if(i>-1) leads[i].status='В обробці';
       });
       saveLeads(leads); renderTable(); toast('Статус оновлено');
     });
     renderTable();
 
-    // ---------------- Відновлення/застосування патчів
-    (function applyPersistedPatches(){
-      // 1) з localStorage
+    // ---------- Відновлення / застосування патчів (і правильне визначення версії)
+    function setVersionUI(v){
+      document.querySelector('meta[name="app-version"]').content=v;
+      $('#currentVersion').textContent='v'+v;
+    }
+    (function applyPatches(){
+      let latest = '1.6.0';
       try{
-        const arr = JSON.parse(localStorage.getItem('appliedPatches')||'[]');
+        const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]');
         arr.forEach(p=>{
           if(p.patch?.css){ const s=document.createElement('style'); s.textContent=p.patch.css; document.head.appendChild(s); }
           if(p.patch?.js){ try{ (new Function(p.patch.js))(); }catch(e){} }
-          if(p.patch?.title){ document.getElementById('appTitle').textContent=p.patch.title; document.title=p.patch.title; }
-          if(p.version){ document.querySelector('meta[name="app-version"]').content=p.version;
-            document.getElementById('currentVersion').textContent='v'+p.version; }
+          if(p.patch?.title){ $('#appTitle').textContent=p.patch.title; document.title=p.patch.title; }
+          if(p.version){ latest = p.version; }
         });
-      }catch(e){}
-      // 2) з вбудованого <script id="applied-patches">
+      }catch{}
       try{
-        const ap = document.getElementById('applied-patches');
-        const data = JSON.parse(ap.textContent||'{}');
+        const ap=$('#applied-patches'); const data=JSON.parse(ap.textContent||'{}');
         (data.applied||[]).forEach(p=>{
           if(p.patch?.css){ const s=document.createElement('style'); s.textContent=p.patch.css; document.head.appendChild(s); }
           if(p.patch?.js){ try{ (new Function(p.patch.js))(); }catch(e){} }
         });
-        if(data.versionPinned){
-          document.querySelector('meta[name="app-version"]').content=data.versionPinned;
-          document.getElementById('currentVersion').textContent='v'+data.versionPinned;
-        }
-      }catch(e){}
+        if(data.versionPinned){ latest = data.versionPinned; }
+      }catch{}
+      // якщо колись запінена стара версія — ігноруємо її
+      try{ localStorage.removeItem('appVersionPinned'); }catch{}
+      setVersionUI(latest);
     })();
 
-    // ---------------- Простий Online-оновлювач (з UI у налаштуваннях)
-    (function onlineUpdates(){
-      const urlInput=document.getElementById('updIndexUrl');
-      const testBtn=document.getElementById('updTestBtn');
-      const fetchBtn=document.getElementById('updFetchBtn');
-      const installBtn=document.getElementById('updInstallLatestBtn');
-      const listBox=document.getElementById('updList');
+    // ---------- Онлайн-оновлення (спрощено)
+    (function online(){
+      const urlInput=$('#updIndexUrl');
+      const testBtn=$('#updTestBtn'), fetchBtn=$('#updFetchBtn'), installBtn=$('#updInstallLatestBtn'), list=$('#updList');
       const key='updatesIndexURL';
-      urlInput.value = localStorage.getItem(key) || '';
-      urlInput.addEventListener('change', ()=> localStorage.setItem(key, urlInput.value.trim()));
-      const toast=(t)=>{ const el=document.getElementById('toast'); el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),2000); };
-
-      async function sha256Text(text){
-        const enc = new TextEncoder().encode(text);
-        const digest = await crypto.subtle.digest('SHA-256', enc);
-        return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
-      }
-      async function fetchIndex(){
-        const url=(urlInput.value||'').trim();
-        if(!url){ toast('Вкажіть URL індексу'); return null; }
-        const res=await fetch(url,{cache:'no-store'});
-        if(!res.ok){ toast('Помилка запиту'); return null; }
-        return res.json();
-      }
-
-      let cached=null;
-      testBtn?.addEventListener('click', async ()=>{
-        const idx=await fetchIndex(); if(!idx) return;
-        toast('Остання: v'+idx.latest);
-        installBtn.disabled = !idx.latest;
-      });
-      fetchBtn?.addEventListener('click', async ()=>{
-        const idx=await fetchIndex(); if(!idx) return;
-        cached=idx; listBox.innerHTML='';
-        (idx.files||[]).forEach(f=>{
-          const b=document.createElement('button');
-          b.className='btn'; b.style.display='block'; b.style.margin='4px 0';
-          b.textContent=`v${f.version} — ${f.notes||f.url}`;
-          b.onclick=()=>installFromURL(f);
-          listBox.appendChild(b);
-        });
-        installBtn.disabled = !idx.latest;
-      });
-      installBtn?.addEventListener('click', async ()=>{
-        if(!cached) return;
-        const last=(cached.files||[]).find(x=>x.version===cached.latest);
-        if(last) await installFromURL(last);
-      });
-
-      async function installFromURL(fileMeta){
+      urlInput.value = localStorage.getItem(key) || 'https://nikobo101.github.io/milawebos-site/updates/index.json';
+      urlInput.addEventListener('change',()=>localStorage.setItem(key, urlInput.value.trim()));
+      async function sha256Text(t){ const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+      async function getIndex(){ const u=urlInput.value.trim(); if(!u){toast('Вкажіть URL індексу'); return null;} const r=await fetch(u,{cache:'no-store'}); if(!r.ok){toast('Помилка запиту'); return null;} return r.json(); }
+      let idx=null;
+      testBtn?.addEventListener('click',async()=>{ idx=await getIndex(); if(idx) { toast('Остання: v'+idx.latest); installBtn.disabled=!idx.latest; } });
+      fetchBtn?.addEventListener('click',async()=>{ idx=await getIndex(); if(!idx) return; list.innerHTML=''; (idx.files||[]).forEach(f=>{ const b=document.createElement('button'); b.className='btn'; b.style.display='block'; b.style.margin='4px 0'; b.textContent=`v${f.version} — ${f.notes||f.url}`; b.onclick=()=>install(f); list.appendChild(b); }); installBtn.disabled=!idx.latest; });
+      installBtn?.addEventListener('click',()=>{ if(!idx) return; const last=(idx.files||[]).find(x=>x.version===idx.latest); if(last) install(last); });
+      async function install(meta){
         try{
-          const res=await fetch(fileMeta.url,{cache:'no-store'}); if(!res.ok) { toast('Не вдалося завантажити'); return; }
-          const text=await res.text();
-          if(fileMeta.sha256 && fileMeta.sha256.length>0){
-            const sum=await sha256Text(text);
-            if(sum.toLowerCase()!==fileMeta.sha256.toLowerCase()){ toast('Хеш не збігається'); return; }
-          }
+          const r=await fetch(meta.url,{cache:'no-store'}); if(!r.ok){toast('Не вдалося завантажити'); return;}
+          const text=await r.text();
+          if(meta.sha256 && meta.sha256.length>0){ const sum=await sha256Text(text); if(sum.toLowerCase()!==meta.sha256.toLowerCase()){ toast('Хеш не збігається'); return; } }
           const mf=JSON.parse(text);
           if(mf.patch?.css){ const s=document.createElement('style'); s.textContent=mf.patch.css; document.head.appendChild(s); }
           if(mf.patch?.js){ try{ (new Function(mf.patch.js))(); }catch(e){} }
-          if(mf.patch?.title){ document.getElementById('appTitle').textContent=mf.patch.title; document.title=mf.patch.title; }
-          if(mf.version){
-            document.querySelector('meta[name="app-version"]').content=mf.version;
-            document.getElementById('currentVersion').textContent='v'+mf.version;
-          }
-          const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]');
-          arr.push({version:mf.version, patch:mf.patch});
-          localStorage.setItem('appliedPatches', JSON.stringify(arr));
+          if(mf.patch?.title){ $('#appTitle').textContent=mf.patch.title; document.title=mf.patch.title; }
+          if(mf.version){ setVersionUI(mf.version); }
+          const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]'); arr.push({version:mf.version, patch:mf.patch}); localStorage.setItem('appliedPatches', JSON.stringify(arr));
           toast('Встановлено v'+mf.version);
         }catch(e){ toast('Помилка встановлення'); }
       }
     })();
 
-    // ---------------- Очистка локальних даних
-    document.getElementById('clearDataBtn')?.addEventListener('click', ()=>{
-      const v=(document.getElementById('currentVersion')?.textContent||'v1.x').replace(/^v/,'');
-      localStorage.clear();
-      localStorage.setItem('appVersionPinned', v);
+    // ---------- Очистити локальні дані (без залипання версії)
+    $('#clearDataBtn')?.addEventListener('click',()=>{
+      try{ localStorage.clear(); }catch{}
       location.reload();
     });
+  })();
   </script>
 </body>
 </html>
