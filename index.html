@@ -1,538 +1,371 @@
-<!doctype html>\n<html lang="uk" data-theme="light"><head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="app-version" content="1.6.0">
-  <title>MilaWEBOS CRM (v1.6.0) — MilaWEBOS</title>
+<!doctype html>
+<html lang="uk" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="app-version" content="1.6.0" />
+  <title>MilaWEBOS CRM</title>
+
+  <!-- Базові стилі (легкі, щоб усе було охайно до застосування патчів) -->
   <style>
-    :root {
-      --bg: #0e1220; --card:#161b2e; --text:#e6e8f0; --muted:#9aa3b2;
-      --accent:#6ea8ff; --accent2:#a78bfa; --border:#222846; --ok:#38d9a9; --err:#ff6b6b;
-      --input:#0f1426;
+    :root{
+      --bg:#0f1426; --card:#141a33; --text:#e7ecff; --muted:#a9b3d9;
+      --border:#262c4d; --input:#0f1530; --pill:#1a2140;
     }
-    [data-theme="light"] {
-      --bg:#f6f7fb; --card:#ffffff; --text:#141a2e; --muted:#4b5569;
-      --accent:#3a7bff; --accent2:#7c5cff; --border:#e5e8f3; --input:#f3f6ff;
+    [data-theme="light"]{
+      --bg:#f6f8ff; --card:#fff; --text:#1b2340; --muted:#5a6590;
+      --border:#d8def4; --input:#eef2ff; --pill:#eef2ff;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial}
-    #particles-js{position:fixed;inset:0;z-index:0;pointer-events:none}
-    .app{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:24px}
-    header{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px}
-    .title{font-weight:800;letter-spacing:.3px;font-size:20px;display:flex;gap:10px;align-items:center}
-    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 16px var(--accent)}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    button{background:linear-gradient(135deg,#1e2542,#19213a);color:#e6e8f0;border:1px solid var(--border);padding:10px 14px;border-radius:12px;cursor:pointer;transition:transform .06s,box-shadow .2s,border-color .2s}
-    [data-theme="light"] button{background:linear-gradient(135deg,#f6f7ff,#e9edff);color:#141a2e}
-    button:hover{transform:translateY(-1px);border-color:#2b3360;box-shadow:0 6px 18px rgba(0,0,0,.12)}
-    button[disabled]{opacity:.6;cursor:not-allowed}
-    .btn-secondary{background:#141a31}
-    [data-theme="light"] .btn-secondary{background:#eef2ff}
-    .grid{display:grid;grid-template-columns:1fr;gap:16px}
-    .card{background:rgba(22,27,46,.82);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.25);backdrop-filter:blur(4px)}
-    [data-theme="light"] .card{background:#fff;box-shadow:0 8px 26px rgba(34,40,70,.08)}
-    h2{margin:0 0 12px;font-size:18px;font-weight:800;color:#dbe1ff}
-    [data-theme="light"] h2{color:#1c2342}
-    label{display:block;font-size:14px;margin:8px 0 6px;color:var(--muted)}
-    input[type="text"],input[type="email"],select,textarea{width:100%;background:var(--input);color:var(--text);border:1px solid #262c4d;border-radius:10px;padding:10px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
-    [data-theme="light"] input[type="text"],[data-theme="light"] input[type="email"],[data-theme="light"] select,[data-theme="light"] textarea{border-color:#d9def0}
-    input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,168,255,.15)}
-    textarea{min-height:90px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .muted{color:var(--muted)}
-    .hidden{display:none}
-    .section{opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s}
-    .section.active{opacity:1;transform:none}
-    .table-wrap{overflow:auto;max-height:360px}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,Segoe UI,Roboto,Arial}
+    .container{max-width:1100px;margin:18px auto;padding:0 14px}
+    header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .dot{width:10px;height:10px;border-radius:50%;background:#7cff9f;box-shadow:0 0 0 4px rgba(124,255,159,.15)}
+    h1{font-size:20px;margin:0}
+    .pill{display:inline-flex;gap:6px;align-items:center;background:var(--pill);border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+    .tabs{display:flex;gap:10px;margin-left:auto}
+    .tabs button{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;padding:8px 12px;cursor:pointer}
+    .tabs button.active{outline:2px solid #4b64ff}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .section{display:none}.section.active{display:block}
+    input,select,textarea{width:100%;background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)}
+    label{font-size:12px;color:var(--muted)}
     table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid #242a4a;padding:8px 10px;font-size:14px}
-    [data-theme="light"] th, [data-theme="light"] td { border-bottom:1px solid #edf0fb }
-    th{text-align:left;color:#bfc7e6}
-    [data-theme="light"] th{color:#1f2750}
-    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#1a2140;border:1px solid #2b3360;font-size:12px;color:#cfe2ff}
-    [data-theme="light"] .pill{background:#eef2ff;border-color:#d8def4;color:#2a335a}
-    .ok{color:var(--ok)} .err{color:var(--err)}
-    .chart-box{height:260px}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0c1122;border:1px solid #222847;padding:2px 6px;border-radius:6px}
-    [data-theme="light"] .kbd{background:#f3f6ff;border-color:#d8def4}
-    .update-panel{display:grid;gap:10px}
-    .update-summary{background:#0f1426;border:1px dashed #2b3360;border-radius:12px;padding:12px}
-    [data-theme="light"] .update-summary{background:#f8faff;border-color:#d8def4}
-    .update-summary h3{margin:0 0 6px;font-size:16px;color:#bfe0ff}
-    [data-theme="light"] .update-summary h3{color:#243062}
-    .changes{margin:8px 0 0;padding-left:18px}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
-    .toast{position:fixed;right:16px;bottom:16px;background:#0f1426;border:1px solid #2b3360;color:#cfe2ff;padding:10px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:9}
-    [data-theme="light"] .toast{background:#ffffff;color:#1f2750;border-color:#d8def4}
-    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left}
+    .row{display:flex;gap:8px;align-items:center}
+    .btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}
+    .btn-secondary{background:#0f1530}
+    #toast{position:fixed;right:16px;bottom:16px;background:#1a2140;border:1px solid var(--border);border-radius:10px;padding:8px 12px}
+    .hidden{display:none!important}
   </style>
-<style>/* Додаткові легкі акценти */ .title .dot{box-shadow:0 0 22px #3a7bff} .card{border-color: rgba(36,48,98,.15)}</style><style>
-/* --- Training overlay styles --- */
-#coachOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); backdrop-filter: blur(1px); z-index: 50; display: none; }
-#coachHighlight { position: fixed; border: 2px solid #6ea8ff; border-radius: 10px; box-shadow: 0 0 0 9999px rgba(0,0,0,.35); pointer-events: none; }
-#coachTooltip { position: fixed; max-width: 360px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.25); z-index: 51; }
-#coachTooltip h4 { margin: 0 0 6px; font-size: 16px; color: #dbe1ff }
-#coachTooltip p { margin: 0 0 10px; font-size: 14px; color: var(--muted) }
-#coachTooltip .row { display:flex; gap:8px; }
-#coachTooltip button { flex:1 }
-#nikFooter { position: fixed; left: 16px; bottom: 10px; z-index: 9; opacity: .85; font-size: 12px; }
-#nikFooter .badge { display:inline-block; padding: 3px 8px; border-radius: 999px; background: #0f1426; border: 1px solid #2b3360; color: #cfe2ff }
-[data-theme="light"] #nikFooter .badge { background: #fff; border-color: #d8def4; color: #2a335a }
-#crmOptionsCard .opts { display: grid; grid-template-columns: repeat(2, minmax(160px,1fr)); gap: 8px; }
-#crmOptionsCard .opts button { text-align: left }
-@media (max-width: 720px) { #coachTooltip { max-width: 92vw } #crmOptionsCard .opts { grid-template-columns: 1fr } }
-</style><style>
-/* === v1.6.0 UI Enhancements === */
-.token-wrap{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--input);border:1px solid #262c4d;border-radius:10px;padding:6px 8px}
-[data-theme="light"] .token-wrap{border-color:#d8def4}
-.token{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;background:#1a2140;border:1px solid #2b3360;color:#cfe2ff;font-size:12px}
-.token .x{cursor:pointer;opacity:.8}
-[data-theme="light"] .token{background:#eef2ff;border-color:#d8def4;color:#2a335a}
-.token-input{border:0;outline:0;background:transparent;color:var(--text);min-width:120px;padding:6px 4px}
-.tag-suggest{position:absolute;z-index:5; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:6px; box-shadow:0 8px 30px rgba(0,0,0,.25)}
-.tag-suggest button{display:block;width:100%;text-align:left;margin:2px 0}
-.customize-bar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-.grid-draggable{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
-.widget{grid-column:span 6;background:rgba(22,27,46,.82);border:1px solid var(--border);border-radius:14px;padding:12px;cursor:move}
-[data-theme="light"] .widget{background:#fff;box-shadow:0 8px 26px rgba(34,40,70,.08)}
-.widget.dragging{opacity:.6}
-.edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:50}
-.edit-card{width:min(560px,92vw);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-.edit-card h3{margin:0 0 10px;color:#dbe1ff}
-.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px}
-@media(max-width:720px){.widget{grid-column:span 12}.stats-grid{grid-template-columns:1fr}}
-.update-manager{margin-top:8px;border:1px dashed var(--border);border-radius:10px;padding:10px}
-.tree ul{list-style:none;padding-left:14px}
-.tree li{margin:2px 0}
-.footer-nik{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
-</style></head>
+
+  <!-- Chart.js потрібен статистиці та частині патчів -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Вбудований блок для персист-патчів (аплікація його читає) -->
+  <script id="applied-patches" type="application/json">{"applied":[]}</script>
+</head>
 <body>
-  <div id="particles-js"><canvas class="particles-js-canvas-el" width="1905" height="945" style="width: 100%; height: 100%;"></canvas></div>
-  <div class="app">
+  <div class="container">
     <header>
-      <div class="title"><span class="dot"></span> <span id="appTitle">MilaWEBOS CRM (v1.6.0)</span> <span class="pill" id="currentVersion">v1.6.0</span></div>
-      <div class="actions">
-        <button id="viewLeadsBtn">Переглянути ліди</button>
-        <button id="settingsBtn" class="btn-secondary">Налаштування</button>
-        <button id="advancedFeaturesBtn" class="btn-secondary">Розширені функції</button>
-        <button id="themeToggleBtn" title="Світла/Темна">🌓 Тема</button>
+      <span class="dot"></span>
+      <h1 id="appTitle">MilaWEBOS CRM</h1>
+      <span class="pill" id="currentVersionWrap">версія: <b id="currentVersion">v1.6.0</b></span>
+      <div class="tabs">
+        <button id="tabForm" class="active">Переглянути ліди</button>
+        <button id="tabSettings">Налаштування</button>
+        <button id="tabAdvanced">Розширені функції</button>
+        <button id="themeToggleBtn">Тема</button>
       </div>
     </header>
 
-    <section id="formSection" class="section card hidden"><div class="customize-bar" id="customizeBar"><button id="startCustomize">🔧 Налаштувати інтерфейс</button><button id="saveLayout" class="btn-secondary" disabled="">Зберегти макет</button></div>
-      <h2>Нова заявка</h2>
-      <div class="toolbar">
-        <input id="searchInput" placeholder="Пошук за імʼям/телефоном/email/тегами" style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text)">
-        <select id="filterStatus">
-          <option value="">Статус: усі</option>
-          <option>Новий</option><option>В обробці</option><option>Закритий</option><option>Відхилений</option>
-        </select>
-        
-        
-        
-        <button id="bulkInProgressBtn">Позначити вибране «В обробці»</button>
-      </div>
-      <div class="card" id="crmOptionsCard">
-      <h2>Опції CRM</h2>
-      <div class="opts">
-        <button id="optCreateLead">➕ Створити лід (швидко)</button>
-        <button id="optFindLead">🔎 Знайти лід</button>
-        <button id="optBulkStatus">📦 Масово: «В обробці»</button>
-        <button id="optDetectDup">🧭 Пошук дублікатів</button>
-        <button id="optMarkPriority">⭐ Позначити пріоритет</button>
-        <button id="optAddTag">🏷️ Додати тег</button>
-        <button id="optQuickNote">🗒️ Швидка нотатка</button>
-        <button id="optAssign">👤 Призначити відповідального</button>
-        <button id="optArchive">🗃️ Архівувати</button>
-        <button id="optRestore">♻️ Відновити</button>
-      </div></div><form id="leadForm">
-        <div class="row">
-          <div><label for="name">Імʼя</label><input type="text" id="name" placeholder="Напр., Марія"></div>
-          <div><label for="phone">Телефон</label><input type="text" id="phone" placeholder="+380…"></div>
-        </div>
-        <div class="row">
-          <div><label for="email">Email</label><input type="email" id="email" placeholder="user@example.com"></div>
-          <div><label for="status">Статус</label>
-            <select id="status"><option>Новий</option><option>В обробці</option><option>Закритий</option><option>Відхилений</option></select>
+    <!-- СЕКЦІЯ: Форма/Ліди -->
+    <section id="formSection" class="section active">
+      <div class="grid">
+        <div class="card" id="crmOptionsCard">
+          <h2>Опції CRM</h2>
+          <div class="row" style="flex-wrap:wrap;gap:6px">
+            <!-- Кнопки додаються патчами; залишимо базові-заглушки -->
+            <button class="btn" id="bulkInProgressBtn">Масово: «В обробці»</button>
           </div>
-        </div>
-        <div class="row">
-          <div><label for="tags">Теги</label><div class="token-wrap"><input class="token-input" placeholder="Введіть тег і Enter"></div><input type="text" id="tags" placeholder="facebook, гарячий, ..." style="display: none;"></div>
-          <div><label for="comment">Коментар</label><textarea id="comment" placeholder="Деталі звернення…"></textarea></div>
-        </div>
-        <div style="display:flex; gap:8px; align-items:center; margin-top:10px">
-          <button type="submit">Відправити</button>
-          <span id="successMessage" class="ok hidden">✅ Заявку надіслано</span>
-          <span id="errorMessage" class="err hidden">⛔ Вкажіть хоча б телефон або email</span>
-        </div>
-      </form>
-      <div class="table-wrap card" style="margin-top:12px">
-        <table id="leadsTable"><thead><tr>
-          <th><input type="checkbox" id="selectAll"></th>
-          <th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Коментар</th><th>Статус</th><th>Теги</th><th>Дата</th><th>Оцінка</th><th>Дії</th>
-        </tr></thead><tbody></tbody></table>
-      </div>
-      <div class="card chart-box" style="margin-top:12px"><canvas id="leadsChart" style="display: block; box-sizing: border-box; height: 226px; width: 1064px;" width="1064" height="226"></canvas></div>
-    </section>
-
-    <section id="leadsSection" class="section card hidden">
-      <h2>Ліди (перегляд)</h2>
-      <div class="table-wrap card">
-        <table id="leadsTable2"><thead><tr>
-          <th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Коментар</th><th>Статус</th><th>Теги</th><th>Дата</th><th>Оцінка</th>
-        </tr></thead><tbody></tbody></table>
-      </div>
-      <div class="card chart-box" style="margin-top:12px"><canvas id="leadsChart2" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
-      <div style="margin-top:12px"><button id="backToFormBtn">← Повернутися до форми</button></div>
-    </section>
-
-    <section id="settingsSection" class="section card active">
-      <h2>Налаштування</h2>
-      <div class="grid"><div class="update-manager" id="updateManager"><h3>Менеджер оновлень (.mmur)</h3>
-      <div style="display:flex; gap:8px; flex-wrap:wrap">
-        <button id="umPick">Вибрати папку</button>
-        <button id="umScan">Сканувати</button>
-        <button id="umInstall" class="btn-secondary" disabled="">Встановити вибране</button>
-      </div>
-      <div class="tree" id="umTree"></div></div><button id="startTrainingBtn" style="margin: 8px 0px;">Навчання (курс)</button>
-        <div class="card update-panel">
-          <div class="muted">Оновлення (.mmur) — автоматичний пошук у вибраній папці</div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap">
-            <button id="pickUpdateFolderBtn">Вибрати папку оновлень</button>
-            <button id="checkUpdateBtn">Перевірити зараз</button>
-            <button id="installUpdateBtn" class="btn-secondary">Встановити</button>
-            <button id="saveAsCurrentBtn" title="Зберегти HTML з активними патчами">Зберегти як поточну версію</button>
-          </div>
-          <div id="updateSummary" class="update-summary">
-            <h3>Знайдено оновлення</h3>
-            <div id="updateMeta"><div>Версія оновлення: <span class="pill">v1.6.0</span></div>
-                             <div>Дата: <span class="pill">2025-11-03</span></div>
-                             <div>Мін. версія застосунку: <span class="pill">v1.1.0</span></div></div>
-            <ul id="updateChanges" class="changes"><li>Теги: Enter додає, історія тегів і підказки, видалення токенами.</li><li>Редагування лідів у таблиці через модальне вікно.</li><li>Статистика: діаграма статусів і графік по днях.</li><li>Персоналізація: перетягування блоків (пазл), збереження макета.</li><li>Бекап/відновлення JSON (ліди, тема, патчі, історія тегів).</li><li>Менеджер оновлень: вибір папки, скан папок/підпапок, встановлення .mmur.</li><li>Прибрано Експорт/Імпорт CSV з головного екрану (тимчасово).</li><li>Світліші стилі, охайніші відступи/тіні.</li><li>Версія відображається зверху (v1.6.0).</li><li>Футер «Powered By NikolosBond · Developer».</li></ul>
-            <div class="muted" id="updateNote">Глобальне покращення: теги з Enter і історією, редагування лідів, статистика, персоналізація (drag&amp;drop), бекап, менеджер оновлень по папках. Тонке полірування UI.</div>
-            <div class="muted" id="updateModeInfo"><div>Режим: <span class="pill">patch-persist</span></div></div>
-          </div>
-          <div class="muted">Після вибору папки застосунок періодично скануватиме <span class="kbd">.mmur</span>-файли і пропонуватиме встановлення. Для збереження файлу <b>в цей самий HTML</b> використовується File System Access API — зʼявиться діалог <i>Зберегти</i>.</div>
         </div>
         <div class="card">
-          <div class="muted" style="margin-bottom:8px">Журнал дій</div>
-          <ul id="logList" style="list-style:none; padding-left:0; margin:0; display:grid; gap:6px"></ul>
+          <h2>Пошук</h2>
+          <input id="searchInput" placeholder="Пошук по імені/телефону/тегах" />
         </div>
-      <div class="card" id="backupBar"><h2>Резервне копіювання</h2>
-      <button id="backupBtn">Зробити бекап</button>
-      <input id="restoreFile" type="file" accept=".json" class="hidden">
-      <button id="restoreBtn" class="btn-secondary">Відновити з файлу</button>
-      <div class="footer-nik">Powered By <b>NikolosBond</b> · Developer</div></div></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h2>Новий лід</h2>
+        <form id="leadForm" class="grid">
+          <div>
+            <label>Імʼя</label>
+            <input id="name" placeholder="Імʼя" />
+          </div>
+          <div>
+            <label>Телефон</label>
+            <input id="phone" placeholder="+380..." />
+          </div>
+          <div>
+            <label>Email</label>
+            <input id="email" type="email" placeholder="email@example.com" />
+          </div>
+          <div>
+            <label>Статус</label>
+            <select id="status">
+              <option>Новий</option><option>В обробці</option>
+              <option>Закритий</option><option>Відхилений</option>
+            </select>
+          </div>
+          <div style="grid-column:1 / -1">
+            <label>Теги</label>
+            <input id="tags" placeholder="facebook, гарячий" />
+          </div>
+          <div style="grid-column:1 / -1">
+            <label>Коментар</label>
+            <textarea id="comment" rows="3"></textarea>
+          </div>
+          <div style="grid-column:1 / -1">
+            <button class="btn" type="submit">Відправити</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card table-wrap" style="margin-top:12px">
+        <h2>Ліди</h2>
+        <table id="leadsTable">
+          <thead>
+            <tr><th></th><th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Теги</th><th>Коментар</th><th>Дії</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
 
-    <section id="advancedFeaturesSection" class="section card hidden">
-      <h2>Розширені функції</h2>
+    <!-- СЕКЦІЯ: Налаштування -->
+    <section id="settingsSection" class="section">
+      <div class="card">
+        <h2>Менеджер оновлень (.mmur)</h2>
+        <div class="row" style="flex-wrap:wrap">
+          <button class="btn" id="umPick">Вибрати папку</button>
+          <button class="btn" id="umScan">Сканувати</button>
+          <button class="btn btn-secondary" id="umInstall" disabled>Встановити вибране</button>
+        </div>
+        <div id="umTree" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h2>Онлайн-оновлення</h2>
+        <div class="grid">
+          <div>
+            <label>URL індексу</label>
+            <input id="updIndexUrl" placeholder="https://<твій_нік>.github.io/milawebos-site/updates/index.json" />
+          </div>
+          <div class="row" style="align-items:end">
+            <button class="btn" id="updTestBtn">Перевірити з’єднання</button>
+            <button class="btn" id="updFetchBtn">Завантажити список</button>
+            <button class="btn btn-secondary" id="updInstallLatestBtn" disabled>Встановити останнє</button>
+          </div>
+        </div>
+        <div id="updList" class="card" style="margin-top:10px"></div>
+      </div>
+
+      <div class="grid" style="margin-top:12px">
+        <div class="card">
+          <h2>Інше</h2>
+          <button class="btn" id="clearDataBtn">Очистити локальні дані</button>
+          <button class="btn" id="startTrainingBtn">Навчання (курс)</button>
+        </div>
+        <div class="card">
+          <h2>Бекап</h2>
+          <button class="btn" id="backupBtn">Зробити бекап</button>
+          <input id="restoreFile" type="file" accept=".json" class="hidden" />
+          <button class="btn btn-secondary" id="restoreBtn">Відновити з файлу</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦІЯ: Розширені -->
+    <section id="advancedFeaturesSection" class="section">
       <div class="grid">
         <div class="card">
-          <div style="display:flex; gap:8px; flex-wrap:wrap">
-            <button id="generateReportBtn">Згенерувати звіт</button>
-            <button id="scheduleMeetingBtn">Запланувати зустріч</button>
-            <button id="clearDataBtn">Очистити локальні дані</button>
-          </div>
-          <div id="generatedReport" class="card" style="margin-top:10px"></div>
-          <div id="scheduledMeeting" class="pill" style="margin-top:10px"></div>
+          <h2>Статистика</h2>
+          <canvas id="chartStatusPie" height="140"></canvas>
         </div>
-      <div class="card" id="statsBlock"><h2>Статистика</h2>
-      <div class="stats-grid">
-        <div class="card"><canvas id="chartStatusPie" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
-        <div class="card"><canvas id="chartByDay" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
-      </div></div></div>
+        <div class="card">
+          <h2>Динаміка по днях</h2>
+          <canvas id="chartByDay" height="140"></canvas>
+        </div>
+      </div>
     </section>
   </div>
 
-  <div id="toast" class="toast">Знайдено оновлення MilaWEBOS_update_v1.6.0.mmur</div>
-
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-  <!-- Зберігаємо застосовані патчі для повторного застосування після перезавантаження -->
-  <script id="applied-patches" type="application/json">{"applied":[{"patch":{"cssVars":{},"css":"/* Додаткові легкі акценти */ .title .dot{box-shadow:0 0 22px #3a7bff} .card{border-color: rgba(36,48,98,.15)}","title":"MilaWEBOS CRM (Light)","js":"try{document.documentElement.setAttribute('data-theme','light');localStorage.setItem('theme','light');}catch(e){}"}},{"patch":{"cssVars":{},"css":"\n/* --- Training overlay styles --- */\n#coachOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); backdrop-filter: blur(1px); z-index: 50; display: none; }\n#coachHighlight { position: fixed; border: 2px solid #6ea8ff; border-radius: 10px; box-shadow: 0 0 0 9999px rgba(0,0,0,.35); pointer-events: none; }\n#coachTooltip { position: fixed; max-width: 360px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.25); z-index: 51; }\n#coachTooltip h4 { margin: 0 0 6px; font-size: 16px; color: #dbe1ff }\n#coachTooltip p { margin: 0 0 10px; font-size: 14px; color: var(--muted) }\n#coachTooltip .row { display:flex; gap:8px; }\n#coachTooltip button { flex:1 }\n#nikFooter { position: fixed; left: 16px; bottom: 10px; z-index: 9; opacity: .85; font-size: 12px; }\n#nikFooter .badge { display:inline-block; padding: 3px 8px; border-radius: 999px; background: #0f1426; border: 1px solid #2b3360; color: #cfe2ff }\n[data-theme=\"light\"] #nikFooter .badge { background: #fff; border-color: #d8def4; color: #2a335a }\n#crmOptionsCard .opts { display: grid; grid-template-columns: repeat(2, minmax(160px,1fr)); gap: 8px; }\n#crmOptionsCard .opts button { text-align: left }\n@media (max-width: 720px) { #coachTooltip { max-width: 92vw } #crmOptionsCard .opts { grid-template-columns: 1fr } }\n","title":"MilaWEBOS CRM (v1.5.0)","js":"\n(function(){\n  // ---- Helper: goto section (independent of app's internal function)\n  function gotoSection(id){\n    document.querySelectorAll('.section').forEach(s=>{ s.classList.add('hidden'); s.classList.remove('active'); });\n    const el = document.getElementById(id);\n    if (el){ el.classList.remove('hidden'); setTimeout(()=>el.classList.add('active'), 10); }\n  }\n\n  // ---- 1) Add CRM Options panel with 10 actions\n  function ensureCrmOptions(){\n    if (document.getElementById('crmOptionsCard')) return;\n    const formSection = document.getElementById('formSection');\n    if (!formSection) return;\n    const card = document.createElement('div');\n    card.className = 'card'; card.id = 'crmOptionsCard';\n    card.innerHTML = `\n      <h2>Опції CRM</h2>\n      <div class=\"opts\">\n        <button id=\"optCreateLead\">➕ Створити лід (швидко)</button>\n        <button id=\"optFindLead\">🔎 Знайти лід</button>\n        <button id=\"optBulkStatus\">📦 Масово: «В обробці»</button>\n        <button id=\"optDetectDup\">🧭 Пошук дублікатів</button>\n        <button id=\"optMarkPriority\">⭐ Позначити пріоритет</button>\n        <button id=\"optAddTag\">🏷️ Додати тег</button>\n        <button id=\"optQuickNote\">🗒️ Швидка нотатка</button>\n        <button id=\"optAssign\">👤 Призначити відповідального</button>\n        <button id=\"optArchive\">🗃️ Архівувати</button>\n        <button id=\"optRestore\">♻️ Відновити</button>\n      </div>`;\n    formSection.insertBefore(card, formSection.querySelector('form'));\n\n    const toast = (txt)=>{ const t=document.getElementById('toast'); if(!t)return; t.textContent=txt; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'), 3000); };\n\n    // minimal behaviors\n    document.getElementById('optCreateLead')?.addEventListener('click', ()=>{\n      document.getElementById('name')?.focus();\n      toast('Введіть дані і натисніть «Відправити»');\n    });\n    document.getElementById('optFindLead')?.addEventListener('click', ()=>{\n      document.getElementById('searchInput')?.focus();\n      toast('Введіть пошуковий запит');\n    });\n    document.getElementById('optBulkStatus')?.addEventListener('click', ()=>{\n      document.getElementById('bulkInProgressBtn')?.click();\n    });\n    document.getElementById('optDetectDup')?.addEventListener('click', ()=>{\n      // naive duplicate detection by phone/email\n      try{\n        const leads = JSON.parse(localStorage.getItem('leads')||'[]');\n        const seen = new Set(); const dups = [];\n        leads.forEach(l=>{\n          const key = (l.phone||'')+'|'+(l.email||'');\n          if (seen.has(key)) dups.push(l);\n          else seen.add(key);\n        });\n        toast(dups.length ? ('Знайдено можливих дублікатів: '+dups.length) : 'Дублікатів не знайдено');\n      }catch(e){}\n    });\n    document.getElementById('optMarkPriority')?.addEventListener('click', ()=>toast('Виділіть потрібні, потім скористайтесь масовими діями'));\n    document.getElementById('optAddTag')?.addEventListener('click', ()=>{\n      const tag = prompt('Введіть тег, який додати до виділених:'); if(!tag) return;\n      try{\n        let leads = JSON.parse(localStorage.getItem('leads')||'[]');\n        document.querySelectorAll('#leadsTable tbody .sel:checked').forEach(cb=>{\n          const id = Number(cb.dataset.id); const i = leads.findIndex(l=>l.id===id); if(i>-1) { leads[i].tags = ((leads[i].tags||'')+','+tag).replace(/^,|,,/g,','); }\n        });\n        localStorage.setItem('leads', JSON.stringify(leads));\n        toast('Теги додано');\n      }catch(e){}\n    });\n    document.getElementById('optQuickNote')?.addEventListener('click', ()=>{\n      const note = prompt('Введіть швидку нотатку для виділених:');\n      if(!note) return;\n      try{\n        let leads = JSON.parse(localStorage.getItem('leads')||'[]');\n        document.querySelectorAll('#leadsTable tbody .sel:checked').forEach(cb=>{\n          const id = Number(cb.dataset.id); const i = leads.findIndex(l=>l.id===id); if(i>-1) { leads[i].comment = (leads[i].comment? leads[i].comment+' | ': '') + note; }\n        });\n        localStorage.setItem('leads', JSON.stringify(leads));\n        toast('Нотатку додано');\n      }catch(e){}\n    });\n    document.getElementById('optAssign')?.addEventListener('click', ()=>{\n      const who = prompt('Кому призначити (імʼя/ініціали)?'); if(!who) return;\n      toast('Призначено: '+who);\n    });\n    document.getElementById('optArchive')?.addEventListener('click', ()=>toast('Архівація — прототип (для демо)'));\n    document.getElementById('optRestore')?.addEventListener('click', ()=>toast('Відновлення — прототип (для демо)'));\n  }\n\n  // ---- 2) Remove unnecessary options: hide Export CSV (and import button for чистота UX)\n  (function(){\n    const ex = document.getElementById('exportCsvBtn'); if (ex) ex.remove();\n    const imBtn = document.getElementById('importCsvBtn'); if (imBtn) imBtn.remove();\n    const imInput = document.getElementById('importCsvInput'); if (imInput) imInput.remove();\n  })();\n\n  // ---- 3) Training mode: button in Settings that launches guided steps on the form\n  function ensureTraining(){\n    // add button to settings header area (inside settingsSection)\n    const settings = document.getElementById('settingsSection');\n    if (!settings) return;\n    if (!document.getElementById('startTrainingBtn')) {\n      const btn = document.createElement('button');\n      btn.id = 'startTrainingBtn'; btn.textContent = 'Навчання (курс)';\n      btn.style.margin = '8px 0';\n      settings.querySelector('.grid')?.prepend(btn);\n      btn.addEventListener('click', ()=>{\n        gotoSection('formSection');\n        startCoaching();\n      });\n    }\n\n    // overlay elements\n    if (!document.getElementById('coachOverlay')) {\n      const ov = document.createElement('div'); ov.id = 'coachOverlay';\n      const hl = document.createElement('div'); hl.id = 'coachHighlight';\n      const tt = document.createElement('div'); tt.id = 'coachTooltip';\n      ov.appendChild(hl); ov.appendChild(tt);\n      document.body.appendChild(ov);\n    }\n\n    const steps = [\n      { sel:'#name', title:'Крок 1: Імʼя', text:'Введіть імʼя клієнта. Напр., «Марія».', place:'bottom' },\n      { sel:'#phone', title:'Крок 2: Телефон', text:'Введіть номер телефону у міжнародному форматі.', place:'bottom' },\n      { sel:'#email', title:'Крок 3: Email', text:'Якщо телефону нема — введіть email.', place:'bottom' },\n      { sel:'#tags', title:'Крок 4: Теги', text:'Додайте теги через кому: facebook, гарячий…', place:'bottom' },\n      { sel:'#comment', title:'Крок 5: Коментар', text:'Опишіть деталі звернення клієнта.', place:'right' },\n      { sel:'#status', title:'Крок 6: Статус', text:'Оберіть актуальний статус ліда.', place:'right' },\n      { sel:'#leadForm button[type=\\\"submit\\\"]', title:'Крок 7: Відправити', text:'Натисніть «Відправити», щоб зберегти лід.', place:'top' },\n      { sel:'#searchInput', title:'Крок 8: Пошук', text:'Шукайте по імені, телефону, тегах.', place:'bottom' },\n      { sel:'#bulkInProgressBtn', title:'Крок 9: Масові дії', text:'Виділіть ліди й задайте «В обробці».', place:'left' },\n      { sel:'#themeToggleBtn', title:'Крок 10: Тема', text:'Перемикайте світлу/темну тему.', place:'bottom' }\n    ];\n\n    function posEl(el){\n      const r = el.getBoundingClientRect();\n      const pad = 6;\n      const x = Math.max(8, r.left - pad), y = Math.max(8, r.top - pad);\n      const w = Math.min(window.innerWidth-16, r.width + pad*2);\n      const h = Math.min(window.innerHeight-16, r.height + pad*2);\n      return {x, y, w, h};\n    }\n\n    let i = 0;\n    function renderStep(){\n      const ov = document.getElementById('coachOverlay'); const hl = document.getElementById('coachHighlight'); const tt = document.getElementById('coachTooltip');\n      const st = steps[i]; const el = document.querySelector(st.sel);\n      if (!el){ i++; if (i>=steps.length){ finish(); return;} return renderStep(); }\n      const p = posEl(el);\n      ov.style.display='block';\n      hl.style.left = p.x+'px'; hl.style.top = p.y+'px'; hl.style.width = p.w+'px'; hl.style.height = p.h+'px';\n      let tx = p.x, ty = p.y + p.h + 10;\n      if (st.place==='top') ty = Math.max(10, p.y - 100);\n      if (st.place==='left') tx = Math.max(10, p.x - 380);\n      if (st.place==='right') tx = Math.min(window.innerWidth - 370, p.x + p.w + 10);\n      tt.style.left = tx+'px'; tt.style.top = ty+'px';\n      tt.innerHTML = `<h4>${st.title}</h4><p>${st.text}</p><div class=\"row\">\n        <button id=\"coachPrev\"${i===0?' disabled':''}>Назад</button>\n        <button id=\"coachNext\">${i===steps.length-1?'Завершити':'Далі'}</button>\n        <button id=\"coachSkip\" class=\"btn-secondary\">Пропустити</button>\n      </div>`;\n      document.getElementById('coachPrev').onclick = ()=>{ if (i>0){ i--; renderStep(); } };\n      document.getElementById('coachNext').onclick = ()=>{ if (i<steps.length-1){ i++; renderStep(); } else { finish(); } };\n      document.getElementById('coachSkip').onclick = finish;\n    }\n\n    function finish(){\n      const ov = document.getElementById('coachOverlay');\n      if (ov) ov.style.display='none';\n      i = 0;\n      // thanks\n      const t = document.getElementById('toast'); if (t){ t.textContent='Навчання завершено'; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'), 2500); }\n    }\n\n    window.startCoaching = function(){ i=0; renderStep(); };\n  }\n\n  // ---- 4) Make sure version label stays visible and footer exists\n  function ensureFooter(){\n    if (!document.getElementById('nikFooter')){\n      const f = document.createElement('div');\n      f.id = 'nikFooter'; f.innerHTML = '<span class=\"badge\">Powered By <b>NikolosBond</b> · Developer</span>';\n      document.body.appendChild(f);\n    }\n  }\n\n  // ---- 5) Light tweaks (keep theme if already chosen)\n  (function(){\n    // nothing here; CSS patch already adjusts visuals\n  })();\n\n  // Execute\n  try{\n    ensureCrmOptions();\n    ensureTraining();\n    ensureFooter();\n    // Ensure we're on form section so user sees changes\n    // gotoSection('formSection');\n  }catch(e){ console.warn('Patch error', e) }\n})();\n"}},{"version":"1.6.0","patch":{"cssVars":{},"css":"\n/* === v1.6.0 UI Enhancements === */\n.token-wrap{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--input);border:1px solid #262c4d;border-radius:10px;padding:6px 8px}\n[data-theme=\"light\"] .token-wrap{border-color:#d8def4}\n.token{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;background:#1a2140;border:1px solid #2b3360;color:#cfe2ff;font-size:12px}\n.token .x{cursor:pointer;opacity:.8}\n[data-theme=\"light\"] .token{background:#eef2ff;border-color:#d8def4;color:#2a335a}\n.token-input{border:0;outline:0;background:transparent;color:var(--text);min-width:120px;padding:6px 4px}\n.tag-suggest{position:absolute;z-index:5; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:6px; box-shadow:0 8px 30px rgba(0,0,0,.25)}\n.tag-suggest button{display:block;width:100%;text-align:left;margin:2px 0}\n.customize-bar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}\n.grid-draggable{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}\n.widget{grid-column:span 6;background:rgba(22,27,46,.82);border:1px solid var(--border);border-radius:14px;padding:12px;cursor:move}\n[data-theme=\"light\"] .widget{background:#fff;box-shadow:0 8px 26px rgba(34,40,70,.08)}\n.widget.dragging{opacity:.6}\n.edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:50}\n.edit-card{width:min(560px,92vw);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}\n.edit-card h3{margin:0 0 10px;color:#dbe1ff}\n.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px}\n@media(max-width:720px){.widget{grid-column:span 12}.stats-grid{grid-template-columns:1fr}}\n.update-manager{margin-top:8px;border:1px dashed var(--border);border-radius:10px;padding:10px}\n.tree ul{list-style:none;padding-left:14px}\n.tree li{margin:2px 0}\n.footer-nik{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}\n","title":"MilaWEBOS CRM (v1.6.0)","js":"\n(function(){\n  const $ = s=>document.querySelector(s);\n  const $$ = s=>Array.from(document.querySelectorAll(s));\n  const toast=(t)=>{const el=$('#toast'); if(!el) return; el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),3000);};\n\n  // --- Version badge + meta\n  function setVersion(v){\n    const meta=document.querySelector('meta[name=\"app-version\"]'); if(meta) meta.content=v;\n    const pill=$('#currentVersion'); if(pill) pill.textContent='v'+v;\n  }\n\n  // --- Persist patch list (shared with app)\n  function getApplied(){ try{return JSON.parse(localStorage.getItem('appliedPatches')||'[]');}catch{return[]} }\n  function addApplied(v,patch){ const arr=getApplied(); arr.push({version:v,patch}); localStorage.setItem('appliedPatches', JSON.stringify(arr)); }\n\n  // ===== Tags: tokens + history + Enter to add =====\n  (function enhanceTags(){\n    const input = $('#tags'); if(!input) return;\n    // hide original and add token UI\n    input.style.display='none';\n    const wrap=document.createElement('div'); wrap.className='token-wrap';\n    const tokenInput=document.createElement('input'); tokenInput.className='token-input'; tokenInput.placeholder='Введіть тег і Enter';\n    input.parentElement.insertBefore(wrap,input); wrap.appendChild(tokenInput);\n    // preload tokens from input value\n    const startTags=(input.value||'').split(',').map(s=>s.trim()).filter(Boolean);\n    const histKey='tagHistory'; let history=new Set(JSON.parse(localStorage.getItem(histKey)||'[]'));\n    function syncInput(){ input.value=$$('.token .txt').map(el=>el.textContent).join(','); }\n    function addToken(t){\n      if(!t) return; if($$('.token .txt').some(el=>el.textContent.toLowerCase()===t.toLowerCase())) return;\n      const tok=document.createElement('span'); tok.className='token';\n      tok.innerHTML='<span class=\"txt\"></span><span class=\"x\">✕</span>';\n      tok.querySelector('.txt').textContent=t; tok.querySelector('.x').onclick=()=>{ tok.remove(); syncInput(); };\n      wrap.insertBefore(tok, tokenInput); history.add(t); localStorage.setItem(histKey, JSON.stringify(Array.from(history))); syncInput();\n    }\n    startTags.forEach(addToken);\n    tokenInput.addEventListener('keydown',e=>{\n      if(e.key==='Enter'){ e.preventDefault(); const t=tokenInput.value.trim(); if(t){ addToken(t); tokenInput.value=''; } }\n      if(e.key==='Backspace' && !tokenInput.value){ const last=$$('.token').pop(); if(last){ last.remove(); syncInput(); } }\n    });\n    // suggestions\n    let sugg;\n    tokenInput.addEventListener('input', ()=>{\n      const q=tokenInput.value.toLowerCase().trim();\n      if(sugg) sugg.remove();\n      if(!q) return;\n      const items=Array.from(history).filter(t=>t.toLowerCase().includes(q)).slice(0,5);\n      if(!items.length) return;\n      sugg=document.createElement('div'); sugg.className='tag-suggest';\n      items.forEach(t=>{ const b=document.createElement('button'); b.type='button'; b.textContent=t; b.onclick=()=>{ addToken(t); tokenInput.value=''; sugg.remove(); }; sugg.appendChild(b); });\n      const r=tokenInput.getBoundingClientRect(); sugg.style.left=r.left+'px'; sugg.style.top=(r.bottom+4)+'px'; document.body.appendChild(sugg);\n    });\n    document.addEventListener('click',e=>{ if(sugg && !sugg.contains(e.target) && e.target!==tokenInput){ sugg.remove(); } });\n  })();\n\n  // ===== Lead edit modal =====\n  (function leadEdit(){\n    if($('#editLeadModal')) return;\n    const modal=document.createElement('div'); modal.className='edit-modal'; modal.id='editLeadModal';\n    modal.innerHTML=`<div class=\"edit-card\">\n      <h3>Редагування ліда</h3>\n      <div class=\"row\">\n        <div><label>Імʼя</label><input id=\"edName\" type=\"text\"></div>\n        <div><label>Телефон</label><input id=\"edPhone\" type=\"text\"></div>\n      </div>\n      <div class=\"row\">\n        <div><label>Email</label><input id=\"edEmail\" type=\"email\"></div>\n        <div><label>Статус</label>\n          <select id=\"edStatus\"><option>Новий</option><option>В обробці</option><option>Закритий</option><option>Відхилений</option></select>\n        </div>\n      </div>\n      <div><label>Теги</label><input id=\"edTags\" type=\"text\"></div>\n      <div><label>Коментар</label><textarea id=\"edComment\"></textarea></div>\n      <div style=\"display:flex; gap:8px; justify-content:flex-end; margin-top:10px\">\n        <button id=\"edCancel\">Скасувати</button>\n        <button id=\"edSave\" class=\"btn-secondary\">Зберегти</button>\n      </div>\n    </div>`;\n    document.body.appendChild(modal);\n    const close=()=>modal.style.display='none';\n    $('#edCancel').onclick=close;\n\n    function openFor(id, data){\n      modal.style.display='flex'; modal.dataset.id=id;\n      $('#edName').value=data.name||''; $('#edPhone').value=data.phone||''; $('#edEmail').value=data.email||'';\n      $('#edStatus').value=data.status||'Новий'; $('#edTags').value=data.tags||''; $('#edComment').value=data.comment||'';\n    }\n    async function save(){\n      const id=Number(modal.dataset.id); let leads=JSON.parse(localStorage.getItem('leads')||'[]');\n      const i=leads.findIndex(l=>l.id===id); if(i<0){ close(); return; }\n      leads[i]=Object.assign({}, leads[i], { name:$('#edName').value.trim(), phone:$('#edPhone').value.trim(), email:$('#edEmail').value.trim(), status:$('#edStatus').value, tags:$('#edTags').value.trim(), comment:$('#edComment').value.trim() });\n      localStorage.setItem('leads', JSON.stringify(leads));\n      close(); toast('Зміни збережено');\n      // re-render tables if exist\n      try{\n        // Trigger a simple refresh by dispatching a change on filter\n        $('#filterStatus')?.dispatchEvent(new Event('change'));\n      }catch(e){}\n    }\n    $('#edSave').onclick=save;\n\n    // inject Edit buttons into main table (observe mutations)\n    ['#leadsTable tbody', '#leadsTable2 tbody'].forEach(sel=>{\n      const tb=$(sel); if(!tb) return;\n      const observer=new MutationObserver(()=>{\n        $$(sel+' tr').forEach(tr=>{\n          if(tr.dataset.edited) return;\n          tr.dataset.edited=1;\n          // find id from first/second cell depending on table\n          const cells=tr.querySelectorAll('td');\n          let idCellIndex = sel.includes('leadsTable2') ? 0 : 1;\n          const idText=cells[idCellIndex]?.textContent?.trim();\n          const id=Number(idText);\n          if(!isFinite(id)) return;\n          const actionsCell = tr.lastElementChild;\n          const btn=document.createElement('button'); btn.className='pill'; btn.textContent='✏️ Редагувати';\n          btn.onclick=()=>{\n            const leads=JSON.parse(localStorage.getItem('leads')||'[]');\n            const item=leads.find(l=>l.id===id); if(!item) return;\n            openFor(id, item);\n          };\n          if(actionsCell) actionsCell.appendChild(btn);\n        });\n      });\n      observer.observe(tb, {childList:true, subtree:true});\n    });\n  })();\n\n  // ===== Stats dashboard =====\n  (function stats(){\n    const adv=$('#advancedFeaturesSection'); if(!adv) return;\n    if($('#statsBlock')) return;\n    const block=document.createElement('div'); block.className='card'; block.id='statsBlock';\n    block.innerHTML=`<h2>Статистика</h2>\n      <div class=\"stats-grid\">\n        <div class=\"card\"><canvas id=\"chartStatusPie\"></canvas></div>\n        <div class=\"card\"><canvas id=\"chartByDay\"></canvas></div>\n      </div>`;\n    adv.querySelector('.grid')?.appendChild(block);\n    setTimeout(()=>render(), 200);\n    function render(){\n      const leads=JSON.parse(localStorage.getItem('leads')||'[]');\n      // pie by status\n      const statuses=['Новий','В обробці','Закритий','Відхилений'];\n      const pie=statuses.map(s=>leads.filter(l=>l.status===s).length);\n      const c1=$('#chartStatusPie'); if(c1){ new Chart(c1,{type:'doughnut', data:{labels:statuses,datasets:[{data:pie} ]}, options:{responsive:true}}); }\n      // by day\n      const byDay={};\n      leads.forEach(l=>{ const d=(l.date||'').split(',')[0].trim(); if(!d) return; byDay[d]=(byDay[d]||0)+1; });\n      const days=Object.keys(byDay).sort((a,b)=>new Date(a.split('.').reverse().join('-'))-new Date(b.split('.').reverse().join('-')));\n      const c2=$('#chartByDay'); if(c2){ new Chart(c2,{type:'line', data:{labels:days, datasets:[{label:'Ліди/день', data:days.map(d=>byDay[d])}]}, options:{responsive:true}}); }\n    }\n  })();\n\n  // ===== Layout personalization (drag & drop \"puzzle\") =====\n  (function personalize(){\n    if($('#customizeBar')) return;\n    const formSec=$('#formSection'); if(!formSec) return;\n    const bar=document.createElement('div'); bar.className='customize-bar'; bar.id='customizeBar';\n    bar.innerHTML=`<button id=\"startCustomize\">🔧 Налаштувати інтерфейс</button><button id=\"saveLayout\" class=\"btn-secondary\" disabled>Зберегти макет</button>`;\n    formSec.prepend(bar);\n    const layoutKey='layoutConfig';\n    let dragSrc=null;\n    function makeDraggable(){\n      $$('.widget').forEach(w=>{ w.setAttribute('draggable','true');\n        w.addEventListener('dragstart',e=>{dragSrc=w; w.classList.add('dragging'); e.dataTransfer.effectAllowed='move';});\n        w.addEventListener('dragend',()=>w.classList.remove('dragging'));\n        w.addEventListener('dragover',e=>{ e.preventDefault(); });\n        w.addEventListener('drop',e=>{ e.preventDefault(); if(!dragSrc || dragSrc===w) return;\n          const parent=w.parentNode; const nodes=[...parent.children];\n          const srcIndex=nodes.indexOf(dragSrc); const dstIndex=nodes.indexOf(w);\n          if(srcIndex<dstIndex) parent.insertBefore(dragSrc, w.nextSibling); else parent.insertBefore(dragSrc, w);\n        });\n      });\n    }\n    $('#startCustomize').onclick=()=>{\n      // wrap selected cards into grid-draggable\n      const container=document.createElement('div'); container.className='grid-draggable'; container.id='gridDrag';\n      const cards = [$('#crmOptionsCard'), $('#leadForm').closest('.section'), $('.table-wrap.card'), $('.chart-box').closest('.card')].filter(Boolean);\n      // choose safe widgets\n      const uniq=[]; cards.forEach(c=>{ if(c && !uniq.includes(c)) uniq.push(c) });\n      uniq.forEach(c=>{ const w=document.createElement('div'); w.className='widget'; w.appendChild(c); container.appendChild(w); });\n      formSec.appendChild(container);\n      $('#saveLayout').disabled=false;\n      makeDraggable();\n    };\n    $('#saveLayout').onclick=()=>{\n      const order=$$('#gridDrag .widget').map(w=> w.innerText.slice(0,40));\n      localStorage.setItem(layoutKey, JSON.stringify(order));\n      toast('Макет збережено');\n    };\n  })();\n\n  // ===== Backup & Restore =====\n  (function backup(){\n    const settings=$('#settingsSection'); if(!settings) return;\n    if($('#backupBar')) return;\n    const bar=document.createElement('div'); bar.className='card'; bar.id='backupBar';\n    bar.innerHTML=`<h2>Резервне копіювання</h2>\n      <button id=\"backupBtn\">Зробити бекап</button>\n      <input id=\"restoreFile\" type=\"file\" accept=\".json\" class=\"hidden\">\n      <button id=\"restoreBtn\" class=\"btn-secondary\">Відновити з файлу</button>\n      <div class=\"footer-nik\">Powered By <b>NikolosBond</b> · Developer</div>`;\n    settings.querySelector('.grid')?.appendChild(bar);\n    $('#backupBtn').onclick=()=>{\n      const data={\n        leads: JSON.parse(localStorage.getItem('leads')||'[]'),\n        theme: localStorage.getItem('theme'),\n        appliedPatches: JSON.parse(localStorage.getItem('appliedPatches')||'[]'),\n        tagHistory: JSON.parse(localStorage.getItem('tagHistory')||'[]')\n      };\n      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});\n      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='milawebos-backup.json'; a.click();\n    };\n    $('#restoreBtn').onclick=()=>$('#restoreFile').click();\n    $('#restoreFile').addEventListener('change', async ()=>{\n      const f=$('#restoreFile').files[0]; if(!f) return;\n      const text=await f.text();\n      try{\n        const data=JSON.parse(text);\n        if(data.leads) localStorage.setItem('leads', JSON.stringify(data.leads));\n        if(data.theme) localStorage.setItem('theme', data.theme);\n        if(data.appliedPatches) localStorage.setItem('appliedPatches', JSON.stringify(data.appliedPatches));\n        if(data.tagHistory) localStorage.setItem('tagHistory', JSON.stringify(data.tagHistory));\n        toast('Дані відновлено'); location.reload();\n      }catch(e){ toast('Файл пошкоджено'); }\n    });\n  })();\n\n  // ===== Update Manager (folder tree, grouped) =====\n  ;(function updateManager(){\n    const settings=$('#settingsSection'); if(!settings || $('#updateManager')) return;\n    const wrap=document.createElement('div'); wrap.className='update-manager'; wrap.id='updateManager';\n    wrap.innerHTML=`<h3>Менеджер оновлень (.mmur)</h3>\n      <div style=\"display:flex; gap:8px; flex-wrap:wrap\">\n        <button id=\"umPick\">Вибрати папку</button>\n        <button id=\"umScan\">Сканувати</button>\n        <button id=\"umInstall\" class=\"btn-secondary\" disabled>Встановити вибране</button>\n      </div>\n      <div class=\"tree\" id=\"umTree\"></div>`;\n    settings.querySelector('.grid')?.prepend(wrap);\n    let folder=null, selected=null;\n\n    async function* walk(dirHandle, path=''){\n      for await (const entry of dirHandle.values()){\n        if(entry.kind==='directory'){ yield {dir:true, name:entry.name, path:path+entry.name+'/'}; yield* walk(entry, path+entry.name+'/'); }\n        else if(entry.kind==='file' && entry.name.toLowerCase().endsWith('.mmur')){\n          yield {file:true, name:entry.name, path:path+entry.name, handle:entry};\n        }\n      }\n    }\n    async function scan(){\n      if(!folder){ toast('Оберіть папку'); return; }\n      const root={name:'root', children:{}};\n      for await (const it of walk(folder,'')){\n        const parts=it.path.split('/').filter(Boolean);\n        let node=root;\n        for(let i=0;i<parts.length;i++){\n          const isFile = (i===parts.length-1 && it.file);\n          const key=parts[i];\n          if(isFile){\n            node.children[key]={file:true, handle:it.handle, name:key};\n          }else{\n            node.children[key]=node.children[key]||{name:key, children:{}};\n            node=node.children[key];\n          }\n        }\n      }\n      const tree=$('#umTree'); tree.innerHTML='';\n      function render(node, ul){\n        Object.keys(node.children||{}).sort().forEach(k=>{\n          const n=node.children[k];\n          const li=document.createElement('li');\n          if(n.file){\n            const btn=document.createElement('button'); btn.textContent=k;\n            btn.onclick=async ()=>{\n              selected = n;\n              const file=await n.handle.getFile(); const text=await file.text();\n              try{\n                const mf=JSON.parse(text);\n                const info = (mf && mf.version)? ('v'+mf.version+' — '+(mf.note||'')) : 'невалідний mmur';\n                toast('Вибрано: '+k+' · '+info);\n                $('#umInstall').disabled=false;\n              }catch{ toast('Файл пошкоджено'); $('#umInstall').disabled=true; }\n            };\n            li.appendChild(btn);\n          } else {\n            li.innerHTML='<b>'+k+'</b>';\n            const childUl=document.createElement('ul'); render(n, childUl); li.appendChild(childUl);\n          }\n          ul.appendChild(li);\n        });\n      }\n      const ul=document.createElement('ul'); render(root, ul); tree.appendChild(ul);\n    }\n\n    $('#umPick').onclick=async()=>{ try{ folder=await window.showDirectoryPicker({id:'mmur-updates-nested'}); toast('Папку вибрано'); }catch(e){} };\n    $('#umScan').onclick=scan;\n    $('#umInstall').onclick=async()=>{\n      if(!selected) return;\n      const file=await selected.handle.getFile(); const text=await file.text();\n      try{\n        const mf=JSON.parse(text);\n        if(mf.patch){\n          // apply patch persistently\n          if(mf.patch.cssVars){ Object.entries(mf.patch.cssVars).forEach(([k,v])=>document.documentElement.style.setProperty(k,v)); }\n          if(mf.patch.css){ const s=document.createElement('style'); s.textContent=mf.patch.css; document.head.appendChild(s); }\n          if(mf.patch.title){ const t=$('#appTitle'); if(t) t.textContent=mf.patch.title; document.title=(mf.patch.title||'MilaWEBOS')+' — MilaWEBOS'; }\n          if(mf.patch.js){ try{ (new Function(mf.patch.js))(); }catch(e){} }\n          setVersion(mf.version||'1.x');\n          addApplied(mf.version||'1.x', mf.patch);\n          toast('Встановлено '+(mf.version||''));\n        } else { toast('У файлі відсутній patch'); }\n      }catch(e){ toast('Помилка встановлення'); }\n    }\n  })();\n\n  // add footer credit if not present\n  (function footer(){\n    if(!document.getElementById('nikFooter')){\n      const f=document.createElement('div'); f.id='nikFooter'; f.className='footer-nik';\n      f.innerHTML='Powered By <b>NikolosBond</b> · Developer';\n      document.body.appendChild(f);\n    }\n  })();\n\n  // Set new version\n  setVersion('1.6.0');\n})();"}}]}</script>
+  <!-- Toast -->
+  <div id="toast" class="hidden">OK</div>
 
   <script>
-    // ---- Helpers
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => Array.from(document.querySelectorAll(sel));
-    const toast = (txt)=>{ const t=$('#toast'); t.textContent = txt; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'), 3500); }
-
-    // ---- Particles
-    particlesJS('particles-js',{particles:{number:{value:45,density:{enable:true,value_area:800}},color:{value:['#6ea8ff','#a78bfa']},shape:{type:'circle'},opacity:{value:.25},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:'#2b3360',opacity:.25,width:1},move:{enable:true,speed:2}},interactivity:{events:{onhover:{enable:true,mode:'grab'},onclick:{enable:true,mode:'push'}},modes:{grab:{distance:140,line_linked:{opacity:.6}}}},retina_detect:true});
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const versionMeta = document.querySelector('meta[name="app-version"]');
-      const versionPill = $('#currentVersion');
-      const appTitleEl = $('#appTitle');
-      function setVersion(v){ if(versionMeta) versionMeta.content=v; if(versionPill) versionPill.textContent='v'+v; }
-
-      // THEME
-      const themeBtn = $('#themeToggleBtn');
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      themeBtn.addEventListener('click', ()=>{
-        const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
+    // ---------------- Навігація по секціях
+    const sections = {
+      tabForm: 'formSection',
+      tabSettings: 'settingsSection',
+      tabAdvanced: 'advancedFeaturesSection'
+    };
+    Object.keys(sections).forEach(btnId=>{
+      const btn=document.getElementById(btnId);
+      btn?.addEventListener('click', ()=>{
+        document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+        document.getElementById(sections[btnId])?.classList.add('active');
       });
+    });
 
-      // DATA
-      let leads = JSON.parse(localStorage.getItem('leads') || '[]');
-      let leadsChartInstance = null;
-      let leadsChartInstance2 = null;
+    // ---------------- Тема (light/dark)
+    const themeBtn=document.getElementById('themeToggleBtn');
+    const savedTheme=localStorage.getItem('theme')||'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeBtn?.addEventListener('click', ()=>{
+      const cur=document.documentElement.getAttribute('data-theme');
+      const next=cur==='light'?'dark':'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
 
-      const showSection = id => { $$('.section').forEach(s=>{s.classList.add('hidden'); s.classList.remove('active')}); const el=$( '#'+id ); el.classList.remove('hidden'); setTimeout(()=>el.classList.add('active'),10) };
+    // ---------------- Реєстрація Service Worker (офлайн)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    }
 
-      function renderLeads(tableSel){
-        const term = ($('#searchInput')?.value || '').toLowerCase();
-        const statusFilter = $('#filterStatus')?.value || '';
-        const rowsTarget = tableSel ? tableSel : '#leadsTable tbody';
-        const tbody = document.querySelector(rowsTarget); if (!tbody) return;
-        tbody.innerHTML = '';
-        leads.filter(l=>{
-          const text = [l.name,l.phone,l.email,l.tags,l.comment].join(' ').toLowerCase();
-          const okTerm = !term || text.includes(term);
-          const okStatus = !statusFilter || l.status === statusFilter;
-          return okTerm && okStatus;
-        }).forEach(l=>{
-          const tr = document.createElement('tr');
-          if (rowsTarget.includes('leadsTable tbody')) {
-            tr.innerHTML = `<td><input type="checkbox" class="sel" data-id="${l.id}"></td>
-                            <td>${l.id}</td><td>${l.name||''}</td><td>${l.phone||''}</td><td>${l.email||''}</td>
-                            <td>${l.comment||''}</td><td>${l.status||''}</td><td>${l.tags||''}</td><td>${l.date||''}</td>
-                            <td>${l.score??''}</td>
-                            <td><button class="pill del" data-id="${l.id}">🗑️</button></td>`;
-          } else {
-            tr.innerHTML = `<td>${l.id}</td><td>${l.name||''}</td><td>${l.phone||''}</td><td>${l.email||''}</td>
-                            <td>${l.comment||''}</td><td>${l.status||''}</td><td>${l.tags||''}</td><td>${l.date||''}</td>
-                            <td>${l.score??''}</td>`;
-          }
-          tbody.appendChild(tr);
+    // ---------------- Примітивна логіка для лід-форми/таблиці (до патчів)
+    const toast = (t)=>{ const el=document.getElementById('toast'); el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),2000); };
+    const leadsKey='leads';
+    function loadLeads(){ try{ return JSON.parse(localStorage.getItem(leadsKey)||'[]'); }catch(e){ return []; } }
+    function saveLeads(arr){ localStorage.setItem(leadsKey, JSON.stringify(arr)); }
+    function renderTable(){
+      const tb=document.querySelector('#leadsTable tbody');
+      const leads=loadLeads();
+      tb.innerHTML='';
+      leads.forEach(l=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = \`
+          <td><input type="checkbox" class="sel" data-id="\${l.id}"></td>
+          <td>\${l.id}</td><td>\${l.name||''}</td><td>\${l.phone||''}</td>
+          <td>\${l.email||''}</td><td>\${l.status||''}</td>
+          <td>\${l.tags||''}</td><td>\${l.comment||''}</td><td></td>\`;
+        tb.appendChild(tr);
+      });
+    }
+    document.getElementById('leadForm')?.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const leads=loadLeads();
+      const id = Date.now();
+      const get=v=>document.getElementById(v).value.trim();
+      leads.push({id, name:get('name'), phone:get('phone'), email:get('email'),
+                  status:document.getElementById('status').value, tags:get('tags'), comment:get('comment'),
+                  date: new Date().toLocaleDateString('uk-UA')});
+      saveLeads(leads); renderTable(); toast('Лід додано');
+      e.target.reset();
+    });
+    document.getElementById('bulkInProgressBtn')?.addEventListener('click', ()=>{
+      const leads=loadLeads();
+      document.querySelectorAll('#leadsTable tbody .sel:checked').forEach(cb=>{
+        const id=Number(cb.dataset.id);
+        const i=leads.findIndex(l=>l.id===id);
+        if(i>-1) leads[i].status='В обробці';
+      });
+      saveLeads(leads); renderTable(); toast('Статус оновлено');
+    });
+    renderTable();
+
+    // ---------------- Відновлення/застосування патчів
+    (function applyPersistedPatches(){
+      // 1) з localStorage
+      try{
+        const arr = JSON.parse(localStorage.getItem('appliedPatches')||'[]');
+        arr.forEach(p=>{
+          if(p.patch?.css){ const s=document.createElement('style'); s.textContent=p.patch.css; document.head.appendChild(s); }
+          if(p.patch?.js){ try{ (new Function(p.patch.js))(); }catch(e){} }
+          if(p.patch?.title){ document.getElementById('appTitle').textContent=p.patch.title; document.title=p.patch.title; }
+          if(p.version){ document.querySelector('meta[name="app-version"]').content=p.version;
+            document.getElementById('currentVersion').textContent='v'+p.version; }
         });
-        // actions
-        tbody.querySelectorAll('button.del').forEach(btn=>btn.addEventListener('click',()=>{
-          const id = Number(btn.dataset.id); leads = leads.filter(l=>l.id!==id);
-          localStorage.setItem('leads', JSON.stringify(leads)); renderLeads(); renderChart('#leadsChart'); renderLeads('#leadsTable2 tbody'); renderChart('#leadsChart2');
-        }));
-      }
-
-      function renderChart(canvasSel){
-        const ctx = $(canvasSel || '#leadsChart'); if(!ctx) return;
-        const statuses = ['Новий','В обробці','Закритий','Відхилений'];
-        const data = statuses.map(s => leads.filter(l => l.status === s).length);
-        const instRef = canvasSel && canvasSel.includes('2') ? '2' : '';
-        const prev = instRef==='2' ? leadsChartInstance2 : leadsChartInstance;
-        if (prev) prev.destroy();
-        const inst = new Chart(ctx, { type:'bar', data:{ labels:statuses, datasets:[{label:'Кількість лідів', data}] }, options:{responsive:true, maintainAspectRatio:false} });
-        if (instRef==='2') leadsChartInstance2 = inst; else leadsChartInstance = inst;
-      }
-
-      // FORM
-      $('#leadForm').addEventListener('submit', e=>{
-        e.preventDefault();
-        const name = $('#name').value.trim();
-        const phone = $('#phone').value.trim();
-        const email = $('#email').value.trim();
-        const comment = $('#comment').value.trim();
-        const status = $('#status').value;
-        const tags = $('#tags').value.trim();
-        const ok = $('#successMessage'); const err = $('#errorMessage');
-        if (!phone && !email) { err.classList.remove('hidden'); ok.classList.add('hidden'); return; }
-        err.classList.add('hidden');
-        const date = new Date().toLocaleString('uk-UA');
-        leads.push({ id: Date.now(), name, phone, email, comment, status, tags, date });
-        localStorage.setItem('leads', JSON.stringify(leads));
-        ok.classList.remove('hidden'); e.target.reset();
-        renderLeads(); renderChart('#leadsChart'); renderLeads('#leadsTable2 tbody'); renderChart('#leadsChart2');
-      });
-
-      // toolbar actions
-      $('#searchInput').addEventListener('input', ()=>renderLeads());
-      $('#filterStatus').addEventListener('change', ()=>renderLeads());
-      $('#exportCsvBtn').addEventListener('click', ()=>{
-        const headers = ['id','name','phone','email','comment','status','tags','date','score'];
-        const rows = leads.map(l=>headers.map(h=> `"${(l[h]??'').toString().replace(/"/g,'""')}"`).join(','));
-        const csv = [headers.join(','), ...rows].join('\n');
-        const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-        const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='leads.csv'; a.click();
-      });
-      $('#importCsvBtn').addEventListener('click', ()=>$('#importCsvInput').click());
-      $('#importCsvInput').addEventListener('change', async ()=>{
-        const file = $('#importCsvInput').files[0]; if(!file) return;
-        const text = await file.text(); const lines = text.split(/\r?\n/).filter(Boolean);
-        const headers = lines.shift().split(',').map(h=>h.replace(/^"|"$/g,''));
-        lines.forEach(line=>{
-          const cols = line.match(/("([^"]|"")*"|[^,]+)/g)||[];
-          const obj = {}; headers.forEach((h,i)=> obj[h] = (cols[i]||'').replace(/^"|"$/g,'').replace(/""/g,'"'));
-          obj.id = Number(obj.id)||Date.now(); leads.push(obj);
+      }catch(e){}
+      // 2) з вбудованого <script id="applied-patches">
+      try{
+        const ap = document.getElementById('applied-patches');
+        const data = JSON.parse(ap.textContent||'{}');
+        (data.applied||[]).forEach(p=>{
+          if(p.patch?.css){ const s=document.createElement('style'); s.textContent=p.patch.css; document.head.appendChild(s); }
+          if(p.patch?.js){ try{ (new Function(p.patch.js))(); }catch(e){} }
         });
-        localStorage.setItem('leads', JSON.stringify(leads)); renderLeads(); renderChart('#leadsChart'); renderLeads('#leadsTable2 tbody'); renderChart('#leadsChart2');
-        toast('Імпорт завершено');
-      });
-      $('#bulkInProgressBtn').addEventListener('click', ()=>{
-        $$('#leadsTable tbody .sel:checked').forEach(cb=>{
-          const id = Number(cb.dataset.id); const i = leads.findIndex(l=>l.id===id); if(i>-1) leads[i].status='В обробці';
-        });
-        localStorage.setItem('leads', JSON.stringify(leads)); renderLeads(); renderChart('#leadsChart'); toast('Статус оновлено');
-      });
-      $('#selectAll').addEventListener('change', (e)=>{
-        $$('#leadsTable tbody .sel').forEach(cb=>cb.checked = e.target.checked);
-      });
-
-      // Nav
-      $('#viewLeadsBtn').addEventListener('click', ()=>{ renderLeads('#leadsTable2 tbody'); renderChart('#leadsChart2'); showSection('leadsSection') });
-      $('#settingsBtn').addEventListener('click', ()=>showSection('settingsSection'));
-      $('#advancedFeaturesBtn').addEventListener('click', ()=>showSection('advancedFeaturesSection'));
-      $('#backToFormBtn').addEventListener('click', ()=>showSection('formSection'));
-
-      // Advanced
-      $('#generateReportBtn').addEventListener('click', ()=>{
-        const total = leads.length;
-        const byStatus = s => leads.filter(l=>l.status===s).length;
-        $('#generatedReport').innerHTML = `<pre>Всього: ${total}
-Нові: ${byStatus('Новий')}
-В обробці: ${byStatus('В обробці')}
-Закриті: ${byStatus('Закритий')}
-Відхилені: ${byStatus('Відхилений')}</pre>`;
-      });
-      $('#scheduleMeetingBtn').addEventListener('click', ()=>{
-        const d = new Date().toLocaleString('uk-UA'); $('#scheduledMeeting').textContent = 'Зустріч заплановано на '+d;
-      });
-      $('#clearDataBtn').addEventListener('click', ()=>{
-        if (confirm('Очистити локальні дані (ліди/тему/патчі)?')) {
-          localStorage.clear(); location.reload();
+        if(data.versionPinned){
+          document.querySelector('meta[name="app-version"]').content=data.versionPinned;
+          document.getElementById('currentVersion').textContent='v'+data.versionPinned;
         }
+      }catch(e){}
+    })();
+
+    // ---------------- Простий Online-оновлювач (з UI у налаштуваннях)
+    (function onlineUpdates(){
+      const urlInput=document.getElementById('updIndexUrl');
+      const testBtn=document.getElementById('updTestBtn');
+      const fetchBtn=document.getElementById('updFetchBtn');
+      const installBtn=document.getElementById('updInstallLatestBtn');
+      const listBox=document.getElementById('updList');
+      const key='updatesIndexURL';
+      urlInput.value = localStorage.getItem(key) || '';
+      urlInput.addEventListener('change', ()=> localStorage.setItem(key, urlInput.value.trim()));
+      const toast=(t)=>{ const el=document.getElementById('toast'); el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),2000); };
+
+      async function sha256Text(text){
+        const enc = new TextEncoder().encode(text);
+        const digest = await crypto.subtle.digest('SHA-256', enc);
+        return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+      }
+      async function fetchIndex(){
+        const url=(urlInput.value||'').trim();
+        if(!url){ toast('Вкажіть URL індексу'); return null; }
+        const res=await fetch(url,{cache:'no-store'});
+        if(!res.ok){ toast('Помилка запиту'); return null; }
+        return res.json();
+      }
+
+      let cached=null;
+      testBtn?.addEventListener('click', async ()=>{
+        const idx=await fetchIndex(); if(!idx) return;
+        toast('Остання: v'+idx.latest);
+        installBtn.disabled = !idx.latest;
+      });
+      fetchBtn?.addEventListener('click', async ()=>{
+        const idx=await fetchIndex(); if(!idx) return;
+        cached=idx; listBox.innerHTML='';
+        (idx.files||[]).forEach(f=>{
+          const b=document.createElement('button');
+          b.className='btn'; b.style.display='block'; b.style.margin='4px 0';
+          b.textContent=`v${f.version} — ${f.notes||f.url}`;
+          b.onclick=()=>installFromURL(f);
+          listBox.appendChild(b);
+        });
+        installBtn.disabled = !idx.latest;
+      });
+      installBtn?.addEventListener('click', async ()=>{
+        if(!cached) return;
+        const last=(cached.files||[]).find(x=>x.version===cached.latest);
+        if(last) await installFromURL(last);
       });
 
-      // ---- UPDATES: .mmur + persist across reload ----
-      const sumBox = $('#updateSummary'); const sumMeta = $('#updateMeta'); const sumChanges = $('#updateChanges'); const sumNote = $('#updateNote'); const sumMode = $('#updateModeInfo');
-      const installBtn = $('#installUpdateBtn'); const checkBtn = $('#checkUpdateBtn');
-      const pickFolderBtn = $('#pickUpdateFolderBtn'); const saveAsBtn = $('#saveAsCurrentBtn');
-
-      let updateFolderHandle = null;
-      let pendingPatch = null;  // parsed manifest object
-      let pendingVersion = null;
-
-      // load previously granted folder permission (optional: not persisted here)
-      async function pickFolder(){ try{ updateFolderHandle = await window.showDirectoryPicker({id:'mmur-updates'}); toast('Папку оновлень вибрано'); } catch(e){ console.warn(e) } }
-      pickFolderBtn.addEventListener('click', pickFolder);
-
-      async function scanForUpdates(){
-        if (!updateFolderHandle) { toast('Спершу виберіть папку оновлень'); return null; }
-        const updates = [];
-        for await (const entry of updateFolderHandle.values()) {
-          if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.mmur')) {
-            const file = await entry.getFile(); const text = await file.text();
-            try {
-              const man = JSON.parse(text);
-              if (man && man.type==='mila-update' && /^mmur\/v1/.test(man.format)) {
-                updates.push({ name: entry.name, manifest: man, fileText: text, fileHandle: entry });
-              }
-            } catch(e) { console.warn('Bad mmur', entry.name, e) }
-          }
-        }
-        if (!updates.length) { toast('Оновлення не знайдені'); return null; }
-        // choose latest by version (simple lexicographic fallback)
-        updates.sort((a,b)=> (a.manifest.version||'0').localeCompare(b.manifest.version||'0', undefined, {numeric:true}));
-        return updates[updates.length-1];
-      }
-
-      async function checkUpdateNow(){
-        const candidate = await scanForUpdates(); if (!candidate) return;
-        const mf = candidate.manifest;
-        pendingPatch = mf; pendingVersion = mf.version;
-        sumChanges.innerHTML=''; sumMeta.innerHTML=''; sumNote.textContent=''; sumMode.textContent='';
-        sumMeta.innerHTML = `<div>Версія оновлення: <span class="pill">v${mf.version}</span></div>
-                             <div>Дата: <span class="pill">${mf.date||'—'}</span></div>
-                             <div>Мін. версія застосунку: <span class="pill">v${mf.minAppVersion||'—'}</span></div>`;
-        (mf.changes||[]).forEach(c=>{ const li=document.createElement('li'); li.textContent=c; sumChanges.appendChild(li); });
-        sumNote.textContent = mf.note||'';
-        sumMode.innerHTML = `<div>Режим: <span class="pill">${mf.mode||'patch-persist'}</span></div>`;
-        sumBox.classList.remove('hidden'); installBtn.disabled = false; toast('Знайдено оновлення '+candidate.name);
-      }
-      checkBtn.addEventListener('click', checkUpdateNow);
-
-      // persist applied patches in the HTML (in <script id="applied-patches">) and in localStorage
-      function getAppliedPatches(){
-        try { return JSON.parse(document.getElementById('applied-patches').textContent).applied || []; } catch { return []; }
-      }
-      function setAppliedPatches(arr){
-        const el = document.getElementById('applied-patches');
-        el.textContent = JSON.stringify({applied: arr});
-        localStorage.setItem('appliedPatches', JSON.stringify(arr));
-      }
-
-      function applyPatch(p, newVersion){
+      async function installFromURL(fileMeta){
         try{
-          if (p.cssVars && typeof p.cssVars==='object'){
-            const root=document.documentElement; Object.entries(p.cssVars).forEach(([k,v])=>root.style.setProperty(k,v));
+          const res=await fetch(fileMeta.url,{cache:'no-store'}); if(!res.ok) { toast('Не вдалося завантажити'); return; }
+          const text=await res.text();
+          if(fileMeta.sha256 && fileMeta.sha256.length>0){
+            const sum=await sha256Text(text);
+            if(sum.toLowerCase()!==fileMeta.sha256.toLowerCase()){ toast('Хеш не збігається'); return; }
           }
-          if (p.css){ const s=document.createElement('style'); s.textContent=p.css; document.head.appendChild(s); }
-          if (p.title){ appTitleEl.textContent=p.title; document.title=p.title+' — MilaWEBOS'; }
-          if (p.js){ try{ (new Function(p.js))(); }catch(e){ console.warn('Patch JS error', e) } }
-          if (newVersion) setVersion(newVersion);
-          // record
-          const list = getAppliedPatches(); list.push({version:newVersion, patch:p}); setAppliedPatches(list);
-          toast('Оновлено до v'+newVersion);
-        }catch(e){ console.error('Patch apply error', e); toast('Помилка застосування патча'); }
+          const mf=JSON.parse(text);
+          if(mf.patch?.css){ const s=document.createElement('style'); s.textContent=mf.patch.css; document.head.appendChild(s); }
+          if(mf.patch?.js){ try{ (new Function(mf.patch.js))(); }catch(e){} }
+          if(mf.patch?.title){ document.getElementById('appTitle').textContent=mf.patch.title; document.title=mf.patch.title; }
+          if(mf.version){
+            document.querySelector('meta[name="app-version"]').content=mf.version;
+            document.getElementById('currentVersion').textContent='v'+mf.version;
+          }
+          const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]');
+          arr.push({version:mf.version, patch:mf.patch});
+          localStorage.setItem('appliedPatches', JSON.stringify(arr));
+          toast('Встановлено v'+mf.version);
+        }catch(e){ toast('Помилка встановлення'); }
       }
+    })();
 
-      // Re-apply patches on load
-      try {
-        const saved = JSON.parse(localStorage.getItem('appliedPatches')||'[]');
-        if (saved.length) {
-          saved.forEach(it=> applyPatch(it.patch));
-          setVersion(versionMeta?.content || '1.1.0');
-        }
-      } catch {}
-
-      installBtn.addEventListener('click', ()=>{
-        if (!pendingPatch) { alert('Немає оновлення'); return; }
-        if ((pendingPatch.mode||'patch-persist') === 'patch-persist') {
-          applyPatch(pendingPatch.patch||{}, pendingVersion||'1.x');
-        } else {
-          // fallback replace (не використовується тут)
-          toast('Це не patch-persist оновлення');
-        }
-      });
-
-      // Save as current HTML: write this document with embedded applied patches JSON so reload keeps state
-      saveAsBtn.addEventListener('click', async ()=>{
-        const handle = await window.showSaveFilePicker({ suggestedName: document.title.replace(/[^\w.-]+/g,'_') + '.html', types:[{description:'HTML', accept:{'text/html':['.html']}}]});
-        const writable = await handle.createWritable();
-        // ensure applied patches script is up to date
-        const html = '<!doctype html>\\n' + document.documentElement.outerHTML;
-        await writable.write(html); await writable.close();
-        toast('Файл збережено. Відкрийте його наступного разу — патчі застосуються автоматично.');
-      });
-
-      // Auto-scan every 10s if folder chosen
-      setInterval(()=>{ if(updateFolderHandle) checkUpdateNow(); }, 10000);
-
-      // Init
-      showSection('formSection');
-      renderLeads(); renderChart('#leadsChart'); renderLeads('#leadsTable2 tbody'); renderChart('#leadsChart2');
+    // ---------------- Очистка локальних даних
+    document.getElementById('clearDataBtn')?.addEventListener('click', ()=>{
+      const v=(document.getElementById('currentVersion')?.textContent||'v1.x').replace(/^v/,'');
+      localStorage.clear();
+      localStorage.setItem('appVersionPinned', v);
+      location.reload();
     });
   </script>
-
-
-<div id="coachOverlay"><div id="coachHighlight"></div><div id="coachTooltip"></div></div><div id="nikFooter"><span class="badge">Powered By <b>NikolosBond</b> · Developer</span></div><div class="edit-modal" id="editLeadModal"><div class="edit-card">
-      <h3>Редагування ліда</h3>
-      <div class="row">
-        <div><label>Імʼя</label><input id="edName" type="text"></div>
-        <div><label>Телефон</label><input id="edPhone" type="text"></div>
-      </div>
-      <div class="row">
-        <div><label>Email</label><input id="edEmail" type="email"></div>
-        <div><label>Статус</label>
-          <select id="edStatus"><option>Новий</option><option>В обробці</option><option>Закритий</option><option>Відхилений</option></select>
-        </div>
-      </div>
-      <div><label>Теги</label><input id="edTags" type="text"></div>
-      <div><label>Коментар</label><textarea id="edComment"></textarea></div>
-      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px">
-        <button id="edCancel">Скасувати</button>
-        <button id="edSave" class="btn-secondary">Зберегти</button>
-      </div>
-    </div></div></body></html>
+</body>
+</html>
