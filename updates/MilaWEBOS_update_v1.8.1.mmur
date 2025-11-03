@@ -1,0 +1,14 @@
+{
+  "type": "mila-update",
+  "format": "mmur/v1",
+  "version": "1.8.1",
+  "date": "2025-11-03",
+  "minAppVersion": "1.1.0",
+  "mode": "patch-persist",
+  "note": "Гарячий фікс: автопідвантаження Chart.js, мʼякий fallback для вибору папки, дефолтне URL онлайн-оновлень.",
+  "patch": {
+    "css": "",
+    "title": "MilaWEBOS CRM (v1.8.1)",
+    "js": "(function(){const $=s=>document.querySelector(s);const toast=t=>{const el=$('#toast');if(!el)return;el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),3000);};(async function ensureChart(){try{if(typeof Chart==='undefined'){await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/chart.js';s.onload=res;s.onerror=()=>{console.warn('Chart.js load failed');res();};document.head.appendChild(s);});}}catch(e){console.warn('Chart ensure err',e);}})();(function ensureUpdateURL(){try{const key='updatesIndexURL';if(!localStorage.getItem(key)){const ghUser='nikobo101';const repo='milawebos-site';localStorage.setItem(key,`https://${ghUser}.github.io/${repo}/updates/index.json`);}}catch(e){}})();(function fsFallback(){const pickBtn=document.getElementById('pickUpdatesFolderBtn')||document.getElementById('umPick')||document.querySelector('#settingsSection button#umPick');if(!pickBtn)return;pickBtn.addEventListener('click',()=>{if(!window.showDirectoryPicker){toast('Ваш браузер не підтримує вибір папки. Використайте Chrome/Edge або Онлайн-оновлення.');}});} )();})()"
+  }
+}
