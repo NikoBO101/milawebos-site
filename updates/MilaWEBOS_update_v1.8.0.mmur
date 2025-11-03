@@ -1,0 +1,14 @@
+{
+  type mila-update,
+  format mmurv1,
+  version 1.8.0,
+  date 2025-11-03,
+  minAppVersion 1.1.0,
+  mode patch-persist,
+  note Додає онлайн-оновлення,
+  patch {
+    css body{background#202020;colorwhite;},
+    title MilaWEBOS CRM v1.8.0,
+    js alert('Оновлення встановлено v1.8.0');
+  }
+}
