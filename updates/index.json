@@ -1,13 +1,15 @@
 {
-  "latest": "1.8.1",
+  "latest": "1.9.0",
   "files": [
     {
-      "version": "1.8.1",
-      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v1.8.1.mmur",
+      "version": "1.9.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v1.9.0.mmur",
       "sha256": "",
-      "notes": "Гарячий фікс: Chart.js + fallback showDirectoryPicker + дефолт URL"
+      "notes": "Clean UI, приховане посилання на індекс, онлайн-синхронізація (pull+експорт)."
     }
   ]
 }
+
+
 
 
