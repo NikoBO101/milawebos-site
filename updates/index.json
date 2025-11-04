@@ -1,14 +1,34 @@
 {
-  "latest": "2.0.0",
+  "latest": "2.1.0",
   "files": [
+    {
+      "version": "2.1.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v2.1.0.mmur",
+      "sha256": "",
+      "notes": "MILACRM бренд, новий дизайн, анімований фон, редагування/видалення лідів, розширені опції та +5 фіч."
+    },
     {
       "version": "2.0.0",
       "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v2.0.0.mmur",
       "sha256": "",
-      "notes": "Аккаунт, канбан, інлайн-редактура, undo/redo, збережені перегляди, notifications, експорт JSON/CSV, автоперевірка оновлень, редизайн."
+      "notes": "Основне оновлення перед редизайном, перехід до структури MILA CRM."
+    },
+    {
+      "version": "1.8.1",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v1.8.1.mmur",
+      "sha256": "",
+      "notes": "Гарячий фікс: Chart.js + fallback showDirectoryPicker + дефолт URL онлайн-оновлень."
+    },
+    {
+      "version": "1.7.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v1.7.0.mmur",
+      "sha256": "",
+      "notes": "Попереднє оновлення: виправлення автозбереження та покращення функціоналу налаштувань."
     }
   ]
 }
+
+
 
 
 
