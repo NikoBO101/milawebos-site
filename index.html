@@ -3,108 +3,127 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="app-version" content="1.6.0" />
-  <title>MilaWEBOS CRM</title>
+  <meta name="app-version" content="3.0.0" />
+  <title>MILACRM</title>
 
   <style>
     :root{
+      --acc:#6a7dff; --btn:#273076; --btnH:#3a47a2; --btn2:#0f1530;
       --bg:#0f1426; --card:#141a33; --text:#e7ecff; --muted:#a9b3d9;
       --border:#262c4d; --input:#0f1530; --pill:#1a2140;
+      --radius:14px; --fs:14px; --density:1;
     }
     [data-theme="light"]{
-      --bg:#f6f8ff; --card:#fff; --text:#1b2340; --muted:#5a6590;
+      --bg:#f6f8ff; --card:#ffffff; --text:#1b2340; --muted:#5a6590;
       --border:#d8def4; --input:#eef2ff; --pill:#eef2ff;
     }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,Segoe UI,Roboto,Arial}
+    html,body{height:100%;font-size:var(--fs)}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,Arial}
     .container{max-width:1100px;margin:18px auto;padding:0 14px}
-    header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-    .dot{width:10px;height:10px;border-radius:50%;background:#7cff9f;box-shadow:0 0 0 4px rgba(124,255,159,.15)}
+    header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
     h1{font-size:20px;margin:0}
     .pill{display:inline-flex;gap:6px;align-items:center;background:var(--pill);border:1px solid var(--border);border-radius:999px;padding:6px 10px}
-    .tabs{display:flex;gap:10px;margin-left:auto}
-    .tabs button{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;padding:8px 12px;cursor:pointer}
-    .tabs button.active{outline:2px solid #4b64ff}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
+    .tabs{display:flex;gap:8px;margin-left:auto}
+    .tabs button{border:1px solid var(--border);background:#161d3a;color:var(--text);border-radius:12px;padding:8px 12px;cursor:pointer}
+    .tabs button.active{outline:2px solid var(--acc)}
+    .topbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#11183a;border:1px solid #2a356b;border-radius:14px;padding:8px 10px;margin-bottom:12px}
+    .status-dot{width:10px;height:10px;border-radius:50%;background:#7cff9f;box-shadow:0 0 0 4px rgba(124,255,159,.15)}
+    .btn{border:1px solid #303a78;background:var(--btn);color:#e7ecff;border-radius:12px;padding:calc(8px*var(--density)) calc(12px*var(--density));cursor:pointer}
+    .btn:hover{background:var(--btnH)}
+    .btn-secondary{background:var(--btn2);border:1px solid #1c2350}
+    .btn[disabled]{opacity:.55;cursor:not-allowed}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .section{display:none}.section.active{display:block}
     input,select,textarea{width:100%;background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)}
     label{font-size:12px;color:var(--muted)}
     table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left}
-    .row{display:flex;gap:8px;align-items:center}
-    .btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}
-    .btn-secondary{background:#0f1530}
+    th,td{border-bottom:1px solid var(--border);padding:8px 10px;text-align:left}
+    .muted{color:var(--muted);font-size:12px}
     #toast{position:fixed;right:16px;bottom:16px;background:#1a2140;border:1px solid var(--border);border-radius:10px;padding:8px 12px}
     .hidden{display:none!important}
+    /* Animated gradient background (toggleable) */
+    body.mw-anim-bg::before{content:"";position:fixed;inset:0;z-index:-1;
+      background:linear-gradient(120deg,#0f1426,#1b244a,#273076,#0f1426);
+      background-size:300% 300%;animation:mwShift 18s ease infinite;filter:saturate(1.05)}
+    @keyframes mwShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    /* Kanban */
+    #kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    #kanban .col{background:rgba(255,255,255,.03);border:1px solid #2a356b;border-radius:12px;padding:8px;min-height:180px}
+    #kanban .cardx{background:#131a34;border:1px solid #2a356b;border-radius:12px;padding:8px;margin:6px 0;cursor:grab}
+    /* Chips */
+    #quickChips .chip{display:inline-block;background:#1a2140;border:1px solid #2a356b;border-radius:999px;padding:4px 8px;margin:2px 4px;color:#a9b3d9;font-size:12px;cursor:pointer}
+    /* Progress */
+    .progress{height:6px;background:#0f1530;border:1px solid #1c2350;border-radius:999px;overflow:hidden}
+    .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4b64ff,#7a8cff)}
   </style>
 
-  <!-- Chart.js для статистики -->
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Блок для персист-патчів -->
   <script id="applied-patches" type="application/json">{"applied":[]}</script>
-
-  <!-- SAFE RESET: одноразово чистимо SW/кеш/пін версії, щоб зняти залипання 1.6 -->
-  <script>
-    (async function SAFE_RESET_ONCE(){
-      try{
-        if(!localStorage.getItem('mw_safe_reset_done')){
-          // 1) прибираємо пін старої версії
-          localStorage.removeItem('appVersionPinned');
-          // 2) чистимо caches
-          if (window.caches) {
-            const keys = await caches.keys();
-            for (const k of keys) { await caches.delete(k); }
-          }
-          // 3) знімаємо всі Service Workers
-          if (navigator.serviceWorker) {
-            const regs = await navigator.serviceWorker.getRegistrations();
-            for (const r of regs) { await r.unregister(); }
-          }
-          localStorage.setItem('mw_safe_reset_done','1');
-          // перезавантаження — вже без старого кешу/піну
-          location.reload();
-        }
-      }catch(e){}
-    })();
-  </script>
 </head>
 <body>
   <div class="container">
     <header>
-      <span class="dot"></span>
-      <h1 id="appTitle">MilaWEBOS CRM</h1>
-      <span class="pill" id="currentVersionWrap">версія: <b id="currentVersion">v1.6.0</b></span>
+      <h1 id="appTitle">MILACRM</h1>
+      <span class="pill">версія: <b id="currentVersion">v3.0.0</b></span>
       <div class="tabs">
-        <button id="tabForm" class="active">Переглянути ліди</button>
+        <button id="tabForm" class="active">Ліди</button>
         <button id="tabSettings">Налаштування</button>
-        <button id="tabAdvanced">Розширені функції</button>
+        <button id="tabAdvanced">Розширені</button>
+        <button id="tabAccount">Обліковий запис</button>
+        <button id="tabTraining">Навчання</button>
         <button id="themeToggleBtn">Тема</button>
       </div>
     </header>
 
-    <!-- Форма/Ліди -->
+    <!-- Верхній тулбар оновлень -->
+    <div class="topbar" id="mwTopbar">
+      <span class="status-dot"></span><b>MILACRM</b>
+      <span class="pill" id="currentVersionWrap">версія: <b id="verTxt">v3.0.0</b></span>
+      <span style="flex:1"></span>
+      <button class="btn" id="btnCheckOnline">Пошук оновлення</button>
+      <button class="btn" id="btnPickFile">Обрати файл</button>
+      <button class="btn btn-secondary" id="btnInstallSel" disabled>Встановити</button>
+      <button class="btn" id="btnGoTraining">Навчання</button>
+    </div>
+
+    <!-- ЛІДИ -->
     <section id="formSection" class="section active">
       <div class="grid">
         <div class="card" id="crmOptionsCard">
           <h2>Опції CRM</h2>
-          <div class="row" style="flex-wrap:wrap;gap:6px">
+          <div class="row" style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn" id="bulkInProgressBtn">Масово: «В обробці»</button>
+            <button class="btn btn-secondary" id="bulkDeleteBtn">🗑 Масово видалити</button>
+            <button class="btn" id="expJsonBtn">⬇ JSON</button>
+            <button class="btn" id="expCsvBtn">⬇ CSV</button>
+            <button class="btn" id="seedDemo">Заповнити демо</button>
+            <button class="btn" id="showLog">Журнал дій</button>
+            <button class="btn" id="checkDup">Перевірити дублікати</button>
+            <button class="btn" id="toggleCols">Поля таблиці</button>
           </div>
         </div>
         <div class="card">
           <h2>Пошук</h2>
-          <input id="searchInput" placeholder="Пошук по імені/телефону/тегах" />
+          <input id="searchInput" placeholder="Пошук по імені/телефону/тегах/статусу" />
+          <div id="quickChips" class="card" style="margin-top:10px">
+            <h2>Швидкі фільтри</h2>
+            <span class="chip">Новий</span>
+            <span class="chip">В обробці</span>
+            <span class="chip">Закритий</span>
+            <span class="chip">facebook</span>
+            <span class="chip">email</span>
+          </div>
         </div>
       </div>
 
       <div class="card" style="margin-top:12px">
         <h2>Новий лід</h2>
         <form id="leadForm" class="grid">
-          <div><label>Імʼя</label><input id="name" /></div>
+          <div><label>Імʼя</label><input id="name" placeholder="Імʼя" /></div>
           <div><label>Телефон</label><input id="phone" placeholder="+380..." /></div>
-          <div><label>Email</label><input id="email" type="email" /></div>
+          <div><label>Email</label><input id="email" type="email" placeholder="email@example.com" /></div>
           <div><label>Статус</label>
             <select id="status"><option>Новий</option><option>В обробці</option><option>Закритий</option><option>Відхилений</option></select>
           </div>
@@ -117,61 +136,126 @@
       <div class="card table-wrap" style="margin-top:12px">
         <h2>Ліди</h2>
         <table id="leadsTable">
-          <thead><tr><th></th><th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Теги</th><th>Коментар</th><th>Дії</th></tr></thead>
+          <thead>
+          <tr><th></th><th>ID</th><th>Імʼя</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Теги</th><th>Коментар</th><th>Дії</th></tr>
+          </thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
 
-    <!-- Налаштування -->
+    <!-- НАЛАШТУВАННЯ -->
     <section id="settingsSection" class="section">
-      <div class="card">
-        <h2>Менеджер оновлень (.mmur)</h2>
-        <div class="row" style="flex-wrap:wrap">
-          <button class="btn" id="umPick">Вибрати папку</button>
-          <button class="btn" id="umScan">Сканувати</button>
-          <button class="btn btn-secondary" id="umInstall" disabled>Встановити вибране</button>
-        </div>
-        <div id="umTree" style="margin-top:8px"></div>
-      </div>
-
-      <div class="card" style="margin-top:12px">
-        <h2>Онлайн-оновлення</h2>
+      <div class="card" id="updatePanel">
+        <h2>Оновлення</h2>
         <div class="grid">
           <div>
             <label>URL індексу</label>
-            <input id="updIndexUrl" placeholder="https://nikobo101.github.io/milawebos-site/updates/index.json" />
+            <input id="updIndexUrlSimple" placeholder="https://nikobo101.github.io/milawebos-site/updates/index.json">
           </div>
-          <div class="row" style="align-items:end">
-            <button class="btn" id="updTestBtn">Перевірити з’єднання</button>
-            <button class="btn" id="updFetchBtn">Завантажити список</button>
-            <button class="btn btn-secondary" id="updInstallLatestBtn" disabled>Встановити останнє</button>
+          <div style="display:flex;align-items:end;gap:8px">
+            <button class="btn" id="updCheck">Пошук оновлення</button>
+            <button class="btn btn-secondary" id="updInstallLatest" disabled>Встановити</button>
           </div>
         </div>
-        <div id="updList" class="card" style="margin-top:10px"></div>
+        <div class="progress" style="margin-top:8px"><i id="updProg"></i></div>
+        <div id="updResult" class="muted" style="margin-top:8px"></div>
       </div>
 
-      <div class="grid" style="margin-top:12px">
+      <div class="card" id="designPanel" style="margin-top:12px">
+        <h2>Налаштування дизайну</h2>
+        <div class="grid">
+          <div><label>Акцентний колір</label><input type="color" id="dpAccent" value="#6a7dff"></div>
+          <div><label>Розмір шрифту</label>
+            <select id="dpFont"><option value="13">13</option><option value="14" selected>14</option><option value="15">15</option><option value="16">16</option></select>
+          </div>
+          <div><label>Щільність інтерфейсу</label>
+            <select id="dpDensity"><option value="compact">Компактна</option><option value="normal" selected>Звичайна</option><option value="comfortable">Комфортна</option></select>
+          </div>
+          <div><label>Анімований фон</label>
+            <select id="dpAnimBg"><option value="on" selected>Увімкнено</option><option value="off">Вимкнено</option></select>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" id="dpApply">Застосувати</button>
+          <button class="btn btn-secondary" id="dpReset">Скинути</button>
+          <button class="btn" id="presetDark">Dark</button>
+          <button class="btn" id="presetLight">Light</button>
+          <button class="btn" id="presetMinecraft">Minecraft</button>
+        </div>
+        <div class="muted" style="margin-top:6px">* Вимкни анімований фон, якщо бракує продуктивності</div>
+      </div>
+    </section>
+
+    <!-- РОЗШИРЕНІ -->
+    <section id="advancedFeaturesSection" class="section">
+      <div class="grid">
         <div class="card">
-          <h2>Інше</h2>
-          <button class="btn" id="clearDataBtn">Очистити локальні дані</button>
-          <button class="btn" id="startTrainingBtn">Навчання (курс)</button>
+          <h2>Статистика</h2>
+          <canvas id="chartStatusPie" height="140"></canvas>
         </div>
         <div class="card">
-          <h2>Бекап</h2>
-          <button class="btn" id="backupBtn">Зробити бекап</button>
-          <input id="restoreFile" type="file" accept=".json" class="hidden" />
-          <button class="btn btn-secondary" id="restoreBtn">Відновити з файлу</button>
+          <h2>Динаміка по днях</h2>
+          <canvas id="chartByDay" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h2>Канбан</h2>
+        <div id="kanban"></div>
+      </div>
+
+      <div class="grid" style="margin-top:12px" id="advOps">
+        <div class="card" id="advArchive">
+          <h2>Архів</h2>
+          <div class="muted">Перемістити виділені ліди до архіву й переглядати архів.</div>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button class="btn" id="toArchiveBtn">→ В архів</button>
+            <button class="btn btn-secondary" id="viewArchiveBtn">Відкрити архів</button>
+          </div>
+        </div>
+        <div class="card" id="advDup">
+          <h2>Дублікати</h2>
+          <div class="muted">Пошук по email/телефону і злиття (ручне).</div>
+          <button class="btn" id="findDupBtn" style="margin-top:6px">Знайти дублікати</button>
+        </div>
+        <div class="card" id="advCustomFields">
+          <h2>Кастомні поля</h2>
+          <div class="muted">Додавай власні поля до форми лідa.</div>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <input id="cfName" placeholder="Напр.: company">
+            <button class="btn" id="addCFBtn">Додати поле</button>
+          </div>
+        </div>
+        <div class="card" id="helpCard">
+          <h2>Підказки</h2>
+          <div class="muted">/ — пошук, N — новий лід, Ctrl+S — зберегти, Shift+Del — масове видалення</div>
         </div>
       </div>
     </section>
 
-    <!-- Розширені -->
-    <section id="advancedFeaturesSection" class="section">
+    <!-- ОБЛІКОВИЙ ЗАПИС -->
+    <section id="accountSection" class="section card">
+      <h2>Обліковий запис</h2>
       <div class="grid">
-        <div class="card"><h2>Статистика</h2><canvas id="chartStatusPie" height="140"></canvas></div>
-        <div class="card"><h2>Динаміка по днях</h2><canvas id="chartByDay" height="140"></canvas></div>
+        <div><label>Логін</label><input id="accUser" placeholder="username"></div>
+        <div><label>Пароль</label><input id="accPass" type="password" placeholder="пароль"></div>
       </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="accCreate">Створити акаунт</button>
+        <button class="btn btn-secondary" id="accLogin">Увійти</button>
+        <button class="btn btn-secondary" id="accLogout">Вийти</button>
+      </div>
+      <div id="accInfo" class="muted" style="margin-top:8px"></div>
+    </section>
+
+    <!-- НАВЧАННЯ -->
+    <section id="trainingSection" class="section card">
+      <h2>Навчання MILACRM</h2>
+      <div class="card step"><b>Крок 1.</b> Додайте лід у вкладці «Ліди». <div class="muted">Заповніть поля і натисніть «Відправити».</div></div>
+      <div class="card step"><b>Крок 2.</b> Спробуйте пошук/фільтри та збережіть «Швидкий перегляд» (чіпси під пошуком).</div>
+      <div class="card step"><b>Крок 3.</b> Відкрийте «Налаштування → Оновлення» та натисніть «Пошук оновлення».</div>
+      <div class="card step"><b>Крок 4.</b> Перейдіть у «Розширені» → подивіться Канбан, Архів, Дублікати, Експорт.</div>
     </section>
   </div>
 
@@ -181,10 +265,10 @@
   (function(){
     const $=s=>document.querySelector(s);
     const $$=s=>Array.from(document.querySelectorAll(s));
-    const toast=t=>{const el=$('#toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2000);};
+    const toast=t=>{const el=$('#toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2200);};
 
-    // ---------- Навігація між вкладками
-    const sections={tabForm:'formSection',tabSettings:'settingsSection',tabAdvanced:'advancedFeaturesSection'};
+    // ===== Навігація по вкладках =====
+    const sections={tabForm:'formSection',tabSettings:'settingsSection',tabAdvanced:'advancedFeaturesSection',tabAccount:'accountSection',tabTraining:'trainingSection'};
     Object.keys(sections).forEach(id=>{
       const btn=$('#'+id);
       btn?.addEventListener('click',()=>{
@@ -194,46 +278,98 @@
         $('#'+sections[id])?.classList.add('active');
       });
     });
+    $('#btnGoTraining')?.addEventListener('click',()=>{
+      $$('#tabTraining')[0]?.click();
+    });
 
-    // ---------- Тема
-    try{
-      const themeBtn=$('#themeToggleBtn');
-      const savedTheme=localStorage.getItem('theme')||'dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      themeBtn?.addEventListener('click',()=>{
-        const cur=document.documentElement.getAttribute('data-theme');
-        const next=cur==='light'?'dark':'light';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-      });
-    }catch{}
+    // ===== Тема =====
+    const themeBtn=$('#themeToggleBtn');
+    const savedTheme=localStorage.getItem('theme')||'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.body.classList.toggle('mw-anim-bg', (localStorage.getItem('mw_anim_bg')||'on')==='on');
+    themeBtn?.addEventListener('click', ()=>{
+      const cur=document.documentElement.getAttribute('data-theme');
+      const next=cur==='light'?'dark':'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
 
-    // ---------- SW офлайн (після reset він зареєструється заново)
-    try{ if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js').catch(()=>{}); } }catch{}
+    // ===== SW (офлайн) =====
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(()=>{}); }
 
-    // ---------- Базова робота з лідами (до патчів)
+    // ===== Ліди CRUD =====
     const leadsKey='leads';
-    const loadLeads=()=>{ try{return JSON.parse(localStorage.getItem(leadsKey)||'[]');}catch{return[]} };
-    const saveLeads=a=>localStorage.setItem(leadsKey, JSON.stringify(a));
-    function renderTable(){
+    const loadLeads=()=>{ try{return JSON.parse(localStorage.getItem(leadsKey)||'[]');}catch(e){return []} };
+    const saveLeads=(a)=>localStorage.setItem(leadsKey, JSON.stringify(a));
+    const renderTable=()=>{
+      const q=($('#searchInput')?.value||'').trim().toLowerCase();
       const tb=$('#leadsTable tbody'); tb.innerHTML='';
-      loadLeads().forEach(l=>{
+      loadLeads().filter(l=>{
+        const hay=[l.name,l.phone,l.email,l.status,l.tags].map(x=>(x||'').toLowerCase()).join('|');
+        return !q || hay.includes(q);
+      }).forEach(l=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td><input type="checkbox" class="sel" data-id="${l.id}"></td>
-        <td>${l.id}</td><td>${l.name||''}</td><td>${l.phone||''}</td>
-        <td>${l.email||''}</td><td>${l.status||''}</td>
-        <td>${l.tags||''}</td><td>${l.comment||''}</td><td></td>`;
+        tr.innerHTML = `
+          <td><input type="checkbox" class="sel" data-id="${l.id}"></td>
+          <td>${l.id}</td>
+          <td>${l.name||''}</td>
+          <td>${l.phone||''}</td>
+          <td>${l.email||''}</td>
+          <td>${l.status||''}</td>
+          <td>${l.tags||''}</td>
+          <td>${l.comment||''}</td>
+          <td>
+            <button class="btn btn-secondary editBtn" data-id="${l.id}">Редагувати</button>
+            <button class="btn btn-secondary delBtn" data-id="${l.id}">Видалити</button>
+          </td>`;
         tb.appendChild(tr);
       });
-    }
-    $('#leadForm')?.addEventListener('submit',(e)=>{
+    };
+    window.renderTable=renderTable;
+
+    $('#leadForm')?.addEventListener('submit', (e)=>{
       e.preventDefault();
       const leads=loadLeads();
-      const id=Date.now(); const v=id=>$('#'+id).value.trim();
-      leads.push({id,name:v('name'),phone:v('phone'),email:v('email'),status:$('#status').value,tags:v('tags'),comment:v('comment'),date:new Date().toLocaleDateString('uk-UA')});
+      const id = Date.now();
+      const get=v=>$('#'+v).value.trim();
+      leads.push({
+        id, name:get('name'), phone:get('phone'), email:get('email'),
+        status:$('#status').value, tags:get('tags'), comment:get('comment'),
+        date: new Date().toISOString(), updatedAt: new Date().toISOString()
+      });
       saveLeads(leads); renderTable(); toast('Лід додано'); e.target.reset();
     });
-    $('#bulkInProgressBtn')?.addEventListener('click',()=>{
+
+    // Редагувати / Видалити / Масове видалення
+    document.addEventListener('click',(e)=>{
+      const editBtn=e.target.closest('.editBtn');
+      const delBtn=e.target.closest('.delBtn');
+      if(editBtn){
+        const id=Number(editBtn.dataset.id);
+        const a=loadLeads(); const i=a.findIndex(x=>x.id===id); if(i<0) return;
+        const l=a[i];
+        const name=prompt('Імʼя:', l.name||''); if(name===null) return;
+        const phone=prompt('Телефон:', l.phone||''); if(phone===null) return;
+        const email=prompt('Email:', l.email||''); if(email===null) return;
+        const status=prompt('Статус (Новий/В обробці/Закритий/Відхилений):', l.status||'Новий'); if(status===null) return;
+        const tags=prompt('Теги (через кому):', l.tags||''); if(tags===null) return;
+        const comment=prompt('Коментар:', l.comment||''); if(comment===null) return;
+        a[i]={...l,name,phone,email,status,tags,comment,updatedAt:new Date().toISOString()};
+        saveLeads(a); renderTable(); toast('Змінено'); return;
+      }
+      if(delBtn){
+        const id=Number(delBtn.dataset.id);
+        if(!confirm('Видалити лід #' + id + '?')) return;
+        let a=loadLeads(); a=a.filter(x=>x.id!==id); saveLeads(a); renderTable(); toast('Видалено'); return;
+      }
+    });
+    $('#bulkDeleteBtn')?.addEventListener('click',()=>{
+      const checked=$$('#leadsTable tbody .sel:checked'); if(!checked.length){toast('Не обрано'); return;}
+      if(!confirm('Видалити обрані ('+checked.length+')?'))return;
+      let a=loadLeads(); const ids=new Set(checked.map(cb=>Number(cb.dataset.id)));
+      a=a.filter(x=>!ids.has(x.id)); saveLeads(a); renderTable(); toast('Видалено '+ids.size);
+    });
+    $('#bulkInProgressBtn')?.addEventListener('click', ()=>{
       const leads=loadLeads();
       $$('#leadsTable tbody .sel:checked').forEach(cb=>{
         const id=Number(cb.dataset.id); const i=leads.findIndex(l=>l.id===id);
@@ -241,71 +377,256 @@
       });
       saveLeads(leads); renderTable(); toast('Статус оновлено');
     });
-    renderTable();
-
-    // ---------- Відновлення / застосування патчів (і правильне визначення версії)
-    function setVersionUI(v){
-      document.querySelector('meta[name="app-version"]').content=v;
-      $('#currentVersion').textContent='v'+v;
-    }
-    (function applyPatches(){
-      let latest = '1.6.0';
-      try{
-        const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]');
-        arr.forEach(p=>{
-          if(p.patch?.css){ const s=document.createElement('style'); s.textContent=p.patch.css; document.head.appendChild(s); }
-          if(p.patch?.js){ try{ (new Function(p.patch.js))(); }catch(e){} }
-          if(p.patch?.title){ $('#appTitle').textContent=p.patch.title; document.title=p.patch.title; }
-          if(p.version){ latest = p.version; }
-        });
-      }catch{}
-      try{
-        const ap=$('#applied-patches'); const data=JSON.parse(ap.textContent||'{}');
-        (data.applied||[]).forEach(p=>{
-          if(p.patch?.css){ const s=document.createElement('style'); s.textContent=p.patch.css; document.head.appendChild(s); }
-          if(p.patch?.js){ try{ (new Function(p.patch.js))(); }catch(e){} }
-        });
-        if(data.versionPinned){ latest = data.versionPinned; }
-      }catch{}
-      // якщо колись запінена стара версія — ігноруємо її
-      try{ localStorage.removeItem('appVersionPinned'); }catch{}
-      setVersionUI(latest);
-    })();
-
-    // ---------- Онлайн-оновлення (спрощено)
-    (function online(){
-      const urlInput=$('#updIndexUrl');
-      const testBtn=$('#updTestBtn'), fetchBtn=$('#updFetchBtn'), installBtn=$('#updInstallLatestBtn'), list=$('#updList');
-      const key='updatesIndexURL';
-      urlInput.value = localStorage.getItem(key) || 'https://nikobo101.github.io/milawebos-site/updates/index.json';
-      urlInput.addEventListener('change',()=>localStorage.setItem(key, urlInput.value.trim()));
-      async function sha256Text(t){ const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
-      async function getIndex(){ const u=urlInput.value.trim(); if(!u){toast('Вкажіть URL індексу'); return null;} const r=await fetch(u,{cache:'no-store'}); if(!r.ok){toast('Помилка запиту'); return null;} return r.json(); }
-      let idx=null;
-      testBtn?.addEventListener('click',async()=>{ idx=await getIndex(); if(idx) { toast('Остання: v'+idx.latest); installBtn.disabled=!idx.latest; } });
-      fetchBtn?.addEventListener('click',async()=>{ idx=await getIndex(); if(!idx) return; list.innerHTML=''; (idx.files||[]).forEach(f=>{ const b=document.createElement('button'); b.className='btn'; b.style.display='block'; b.style.margin='4px 0'; b.textContent=`v${f.version} — ${f.notes||f.url}`; b.onclick=()=>install(f); list.appendChild(b); }); installBtn.disabled=!idx.latest; });
-      installBtn?.addEventListener('click',()=>{ if(!idx) return; const last=(idx.files||[]).find(x=>x.version===idx.latest); if(last) install(last); });
-      async function install(meta){
-        try{
-          const r=await fetch(meta.url,{cache:'no-store'}); if(!r.ok){toast('Не вдалося завантажити'); return;}
-          const text=await r.text();
-          if(meta.sha256 && meta.sha256.length>0){ const sum=await sha256Text(text); if(sum.toLowerCase()!==meta.sha256.toLowerCase()){ toast('Хеш не збігається'); return; } }
-          const mf=JSON.parse(text);
-          if(mf.patch?.css){ const s=document.createElement('style'); s.textContent=mf.patch.css; document.head.appendChild(s); }
-          if(mf.patch?.js){ try{ (new Function(mf.patch.js))(); }catch(e){} }
-          if(mf.patch?.title){ $('#appTitle').textContent=mf.patch.title; document.title=mf.patch.title; }
-          if(mf.version){ setVersionUI(mf.version); }
-          const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]'); arr.push({version:mf.version, patch:mf.patch}); localStorage.setItem('appliedPatches', JSON.stringify(arr));
-          toast('Встановлено v'+mf.version);
-        }catch(e){ toast('Помилка встановлення'); }
-      }
-    })();
-
-    // ---------- Очистити локальні дані (без залипання версії)
-    $('#clearDataBtn')?.addEventListener('click',()=>{
-      try{ localStorage.clear(); }catch{}
-      location.reload();
+    $('#searchInput')?.addEventListener('input', renderTable);
+    $('#quickChips')?.addEventListener('click', e=>{
+      const tag=e.target.closest('.chip')?.textContent; if(!tag) return;
+      $('#searchInput').value=tag; $('#searchInput').dispatchEvent(new Event('input'));
     });
+
+    // Експорт JSON/CSV
+    $('#expJsonBtn')?.addEventListener('click',()=>{
+      const data=JSON.stringify(loadLeads(),null,2);
+      const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+      const a=document.createElement('a'); a.href=url; a.download='leads.json'; a.click(); URL.revokeObjectURL(url);
+    });
+    $('#expCsvBtn')?.addEventListener('click',()=>{
+      const arr=loadLeads(); const head=['id','name','phone','email','status','tags','comment'];
+      const rows=[head.join(',')].concat(arr.map(l=>head.map(k=>(''+(l[k]??'')).replace(/\"/g,'\"\"')).map(x=>`\"${x}\"`).join(',')));
+      const csv=rows.join('\n');
+      const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+      const a=document.createElement('a'); a.href=url; a.download='leads.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // Демодані, журнал, дублікати, колонки
+    let MW_LOG=[];
+    window.mwLog=(m)=>{MW_LOG.push({t:Date.now(),m}); if(MW_LOG.length>100) MW_LOG.shift();};
+    $('#seedDemo')?.addEventListener('click',()=>{
+      const now=Date.now();
+      const demo=[
+        {id:now+1,name:'Ірина',phone:'+38000000001',email:'irina@example.com',status:'Новий',tags:'facebook',comment:'цікавилась демо',date:new Date().toISOString(),updatedAt:new Date().toISOString()},
+        {id:now+2,name:'Олег',phone:'+38000000002',email:'oleg@example.com',status:'В обробці',tags:'email',comment:'потрібен прайс',date:new Date().toISOString(),updatedAt:new Date().toISOString()}
+      ];
+      const a=loadLeads(); saveLeads(a.concat(demo)); renderTable(); toast('Демодані додано');
+    });
+    $('#showLog')?.addEventListener('click',()=>{
+      alert('Останні дії:\n'+MW_LOG.slice(-10).map(x=>new Date(x.t).toLocaleTimeString('uk-UA')+' — '+x.m).join('\n'));
+    });
+    $('#checkDup')?.addEventListener('click',()=>{
+      const a=loadLeads(); const map=new Set();
+      const dups=a.filter(l=>{const k=((l.email||'')+'|'+(l.phone||'')).toLowerCase(); if(map.has(k)) return true; map.add(k); return false;});
+      alert('Дублікатів: '+dups.length);
+    });
+    $('#toggleCols')?.addEventListener('click',()=>{
+      const labels=['Email','Теги','Коментар'];
+      labels.forEach(label=>{
+        const th=[...$('#leadsTable thead tr').children].find(x=>x.textContent===label);
+        if(!th) return; const idx=[...th.parentElement.children].indexOf(th);
+        $$('#leadsTable tr').forEach(tr=>{ const td=tr.children[idx]; if(td) td.classList.toggle('hidden'); });
+      });
+    });
+
+    // Валідація
+    $('#email')?.addEventListener('input', e=>{
+      const v=e.target.value.trim();
+      const ok=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)||v==='';
+      e.target.classList.toggle('input-err',!ok);
+    });
+    $('#phone')?.addEventListener('input', e=>{
+      const v=e.target.value.trim();
+      const ok=/^[+0-9()\-\s]{6,}$/.test(v)||v==='';
+      e.target.classList.toggle('input-err',!ok);
+    });
+
+    // Канбан
+    (function kanban(){
+      const kb=$('#kanban'); if(!kb) return;
+      const cols=['Новий','В обробці','Закритий','Відхилений'];
+      cols.forEach(c=>{
+        const col=document.createElement('div'); col.className='col'; col.dataset.status=c;
+        col.innerHTML=`<h3>${c}</h3>`; col.ondragover=e=>e.preventDefault();
+        col.ondrop=e=>{const id=e.dataTransfer.getData('text/plain'); move(Number(id),c); draw();};
+        kb.appendChild(col);
+      });
+      const leads=()=>loadLeads();
+      const save=v=>saveLeads(v);
+      function move(id,status){const a=leads(); const i=a.findIndex(x=>x.id===id); if(i>-1){a[i].status=status; save(a); renderTable();}}
+      function card(l){const d=document.createElement('div'); d.className='cardx'; d.draggable=true;
+        d.ondragstart=e=>{e.dataTransfer.setData('text/plain', String(l.id));};
+        d.innerHTML=`<b>${l.name||'Без назви'}</b><br><span class='muted'>${l.phone||''} ${l.email||''}</span>`;
+        return d;
+      }
+      function draw(){
+        $$('#kanban .col').forEach(c=>{
+          c.querySelectorAll('.cardx').forEach(n=>n.remove());
+          leads().filter(l=>l.status===c.dataset.status).forEach(l=>c.appendChild(card(l)));
+        });
+      }
+      draw();
+    })();
+
+    // Архів / Дублікати / Кастомні поля
+    const loadArch=()=>{ try{return JSON.parse(localStorage.getItem('leads_archive')||'[]')}catch(e){return []} };
+    $('#toArchiveBtn')?.addEventListener('click',()=>{
+      const ids=Array.from($$('#leadsTable tbody .sel:checked')).map(cb=>Number(cb.dataset.id));
+      if(!ids.length){toast('Нічого не обрано');return;}
+      let a=loadLeads(); const moving=a.filter(x=>ids.includes(x.id)); a=a.filter(x=>!ids.includes(x.id)); saveLeads(a);
+      const arch=loadArch(); localStorage.setItem('leads_archive', JSON.stringify(arch.concat(moving)));
+      renderTable(); toast('В архів: '+moving.length);
+    });
+    $('#viewArchiveBtn')?.addEventListener('click',()=>{
+      const arch=loadArch(); alert('У архіві записів: '+arch.length);
+    });
+    $('#findDupBtn')?.addEventListener('click',()=>{
+      const a=loadLeads();
+      const key=(l)=> (l.email||'').toLowerCase()+'|'+(l.phone||'').replace(/\D/g,'');
+      const map=new Map(); const dups=[];
+      a.forEach(l=>{const k=key(l); if(map.has(k)) dups.push([map.get(k),l]); else map.set(k,l);});
+      if(!dups.length){toast('Дублікатів не знайдено');return;}
+      alert('Знайдено дублікатів: '+dups.length+' (див. консоль)'); console.log('DUPLICATES', dups);
+    });
+    $('#addCFBtn')?.addEventListener('click',()=>{
+      const n=($('#cfName')?.value||'').trim(); if(!n){toast('Назва поля?');return;}
+      const wrap=document.createElement('div'); wrap.style.gridColumn='1 / -1'; wrap.innerHTML=`<label>${n}</label><input id="cf_${n}">`;
+      $('#leadForm')?.append(wrap); toast('Поле додано');
+    });
+
+    // Хоткеї
+    document.addEventListener('keydown',e=>{
+      if(e.key==='/' && !e.target.closest('input,textarea')){e.preventDefault(); $('#searchInput')?.focus();}
+      if((e.key==='n'||e.key==='N') && !e.target.closest('input,textarea')){e.preventDefault(); $('#name')?.focus();}
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){e.preventDefault(); $('#leadForm')?.dispatchEvent(new Event('submit',{cancelable:true})); toast('Збережено');}
+      if(e.shiftKey && e.key==='Delete'){ e.preventDefault(); $('#bulkDeleteBtn')?.click(); }
+    });
+
+    // Обліковий запис (локальний)
+    async function sha256(t){const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+    function setGateUI(isIn){ $('#settingsSection')?.classList.toggle('hidden',!isIn); $('#advancedFeaturesSection')?.classList.toggle('hidden',!isIn); }
+    $('#accCreate')?.addEventListener('click', async ()=>{
+      const u=$('#accUser').value.trim(); const p=$('#accPass').value; if(!u||!p){toast('Логін і пароль');return;}
+      const salt=(Math.random().toString(36)+Date.now().toString(36)).slice(0,12);
+      const hash=await sha256(p+salt);
+      localStorage.setItem('acct', JSON.stringify({u,salt,hash}));
+      localStorage.setItem('acct_session', JSON.stringify({u,ts:Date.now()}));
+      $('#accInfo').textContent='Акаунт створено і увійдено'; setGateUI(true);
+    });
+    $('#accLogin')?.addEventListener('click', async ()=>{
+      const rec=JSON.parse(localStorage.getItem('acct')||'null'); if(!rec){toast('Спершу створіть акаунт');return;}
+      const u=$('#accUser').value.trim(); const p=$('#accPass').value; const hash=await sha256(p+rec.salt);
+      if(rec.u===u && rec.hash===hash){ localStorage.setItem('acct_session', JSON.stringify({u,ts:Date.now()})); $('#accInfo').textContent='Вхід успішний'; setGateUI(true); }
+      else $('#accInfo').textContent='Невірні дані';
+    });
+    $('#accLogout')?.addEventListener('click', ()=>{
+      localStorage.removeItem('acct_session'); $('#accInfo').textContent='Вихід виконано'; setGateUI(false);
+    });
+    setGateUI(!!localStorage.getItem('acct_session'));
+
+    // Налаштування дизайну
+    const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+    const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+    function applyDesign(cfg){
+      if(cfg.accent) document.documentElement.style.setProperty('--acc',cfg.accent);
+      if(cfg.font) document.documentElement.style.setProperty('--fs',cfg.font+'px');
+      if(cfg.density){const d=cfg.density==='compact'?0.9:(cfg.density==='comfortable'?1.15:1); document.documentElement.style.setProperty('--density',String(d));}
+      const anim = cfg.animBg!==undefined ? cfg.animBg : true;
+      document.body.classList.toggle('mw-anim-bg', !!anim);
+      localStorage.setItem('mw_anim_bg', anim ? 'on' : 'off');
+    }
+    const cfg0=get('mw_design_cfg',{accent:'#6a7dff',font:14,density:'normal',animBg:true});
+    $('#dpAccent').value=cfg0.accent; $('#dpFont').value=String(cfg0.font); $('#dpDensity').value=cfg0.density; $('#dpAnimBg').value=cfg0.animBg?'on':'off'; applyDesign(cfg0);
+    $('#dpApply').addEventListener('click', ()=>{
+      const cfg={accent:$('#dpAccent').value,font:Number($('#dpFont').value),density:$('#dpDensity').value,animBg:$('#dpAnimBg').value==='on'};
+      set('mw_design_cfg',cfg); applyDesign(cfg); toast('Дизайн застосовано');
+    });
+    $('#dpReset').addEventListener('click', ()=>{
+      const def={accent:'#6a7dff',font:14,density:'normal',animBg:true}; set('mw_design_cfg',def); applyDesign(def); toast('Повернуто за замовчуванням');
+    });
+    $('#presetDark').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); const c=get('mw_design_cfg',{accent:'#6a7dff',font:14,density:'normal',animBg:true}); c.accent='#6a7dff'; c.animBg=true; set('mw_design_cfg',c); applyDesign(c);});
+    $('#presetLight').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','light'); localStorage.setItem('theme','light'); const c=get('mw_design_cfg',{accent:'#3b5bff',font:14,density:'normal',animBg:false}); c.accent='#3b5bff'; c.animBg=false; set('mw_design_cfg',c); applyDesign(c);});
+    $('#presetMinecraft').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); const c=get('mw_design_cfg',{accent:'#6aa84f',font:14,density:'normal',animBg:false}); c.accent='#6aa84f'; c.animBg=false; set('mw_design_cfg',c); applyDesign(c);});
+
+    // Онлайн-оновлення (спрощене, із вбудованим URL)
+    const INDEX_HARD='https://nikobo101.github.io/milawebos-site/updates/index.json';
+    const urlInput=$('#updIndexUrlSimple');
+    urlInput.value=localStorage.getItem('updatesIndexURL')||INDEX_HARD;
+    urlInput.addEventListener('change',()=>localStorage.setItem('updatesIndexURL', urlInput.value.trim()));
+    $('#btnCheckOnline')?.addEventListener('click',()=>$('#updCheck')?.click());
+    const prog=(n)=>$('#updProg').style.width=n+'%';
+    async function sha256Text(t){const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+    async function fetchIndex(){
+      const url=(urlInput.value||'').trim(); if(!url){toast('Вкажіть URL'); return null;}
+      const r=await fetch(url,{cache:'no-store'}); if(!r.ok){toast('Помилка запиту'); return null;}
+      return r.json();
+    }
+    $('#updCheck')?.addEventListener('click', async ()=>{
+      const idx=await fetchIndex(); if(!idx) return; prog(60);
+      $('#updResult').textContent='Знайдено: остання версія v'+(idx.latest||'?'); $('#updInstallLatest').disabled=!idx.latest;
+      localStorage.setItem('mw_last_index', JSON.stringify(idx)); prog(100);
+    });
+    $('#updInstallLatest')?.addEventListener('click', async ()=>{
+      const idx=JSON.parse(localStorage.getItem('mw_last_index')||'null'); if(!idx){toast('Спочатку пошук оновлення'); return;}
+      const last=(idx.files||[]).find(x=>x.version===idx.latest); if(!last){toast('Не знайдено метадані'); return;}
+      await installFromURL(last);
+    });
+
+    // Обрати файл / Встановити (з тулбара)
+    let pickedText=null;
+    $('#btnPickFile')?.addEventListener('click', async ()=>{
+      try{
+        const [h]=await showOpenFilePicker({types:[{description:'MILACRM update (*.mmur)', accept:{'application/json':['.mmur']}}]});
+        const f=await h.getFile(); pickedText=await f.text();
+        $('#btnInstallSel').disabled=false; toast('Файл вибрано');
+      }catch(e){toast('Скасовано');}
+    });
+    $('#btnInstallSel')?.addEventListener('click', ()=>{
+      try{ if(!pickedText){toast('Спочатку оберіть файл'); return;}
+        const mf=JSON.parse(pickedText); applyPatch(mf); toast('Встановлено v'+mf.version);
+      }catch(e){ toast('Невірний файл'); }
+    });
+
+    async function installFromURL(meta){
+      try{
+        prog(15); const r=await fetch(meta.url,{cache:'no-store'}); if(!r.ok){toast('Не вдалося завантажити'); prog(0); return;}
+        const text=await r.text(); prog(65);
+        if(meta.sha256 && meta.sha256.length>0){ const sum=await sha256Text(text); if(sum.toLowerCase()!==meta.sha256.toLowerCase()){toast('Хеш не збігається'); prog(0); return;} }
+        const mf=JSON.parse(text); applyPatch(mf); prog(100); $('#updResult').textContent='Встановлено v'+mf.version;
+      }catch(e){ toast('Помилка встановлення'); prog(0); }
+    }
+
+    function applyPatch(mf){
+      try{
+        if(mf.patch?.css){ const s=document.createElement('style'); s.textContent=mf.patch.css; document.head.appendChild(s); }
+        if(mf.patch?.js){ try{ (new Function(mf.patch.js))(); }catch(e){} }
+        if(mf.patch?.title){ $('#appTitle').textContent=mf.patch.title; document.title=mf.patch.title; }
+        if(mf.version){
+          document.querySelector('meta[name="app-version"]').content=mf.version;
+          $('#currentVersion').textContent = 'v'+mf.version; $('#verTxt').textContent='v'+mf.version;
+        }
+        const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]');
+        arr.push({version:mf.version, patch:mf.patch});
+        localStorage.setItem('appliedPatches', JSON.stringify(arr));
+      }catch(e){ toast('Помилка застосування'); }
+    }
+
+    // Статистика (проста ініціалізація)
+    function drawCharts(){
+      try{
+        const a=loadLeads(); const byStatus={'Новий':0,'В обробці':0,'Закритий':0,'Відхилений':0};
+        a.forEach(l=>{ if(byStatus[l.status]!=null) byStatus[l.status]++; });
+        const pie=new Chart(document.getElementById('chartStatusPie'),{
+          type:'pie', data:{labels:Object.keys(byStatus), datasets:[{data:Object.values(byStatus)}]}, options:{plugins:{legend:{position:'bottom'}}}
+        });
+        const days={}; a.forEach(l=>{ const d=(l.date||'').slice(0,10); if(!d) return; days[d]=(days[d]||0)+1; });
+        const line=new Chart(document.getElementById('chartByDay'),{
+          type:'line', data:{labels:Object.keys(days), datasets:[{data:Object.values(days), tension:.3}]}, options:{plugins:{legend:{display:false}}}
+        });
+      }catch(e){}
+    }
+
+    // Ініціалізація
+    renderTable(); drawCharts();
+
+    // За замовчуванням — якщо індексу нема, підставляємо вбудований
+    if(!localStorage.getItem('updatesIndexURL')) localStorage.setItem('updatesIndexURL', INDEX_HARD);
   })();
   </script>
 </body>
