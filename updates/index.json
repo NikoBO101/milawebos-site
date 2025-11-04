@@ -1,20 +1,21 @@
 {
-  "latest": "3.7.0",
+  "latest": "4.0.0",
   "files": [
+    {
+      "version": "4.0.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v4.0.0.mmur",
+      "sha256": "",
+      "notes": "Фінал: модальне навчання (закриває все зайве, пауза/продовжити, slow 0.2×), full i18n, drawer-редагування ліда, Security Code, прибирання зайвого, 20+ фіч конкурентного рівня, логотип, фікс тем."
+    },
     {
       "version": "3.7.0",
       "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.7.0.mmur",
       "sha256": "",
-      "notes": "Навчання перекриває UI; AI-панель пересувна з діями; повний i18n UA/EN; кошик-іконка; бокове меню; NeonGlass; 20 нових фіч."
-    },
-    {
-      "version": "3.6.0",
-      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.6.0.mmur",
-      "sha256": "",
-      "notes": "Автотренажер (вводить/клікає/озвучує), AI Assistant (BYO/локальний)."
+      "notes": "AI-панель пересувна; повний i18n; бокове меню; NeonGlass; 20 фіч."
     }
   ]
 }
+
 
 
 
