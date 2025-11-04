@@ -1,13 +1,12 @@
-[
-  {
-    "id": 1001,
-    "name": "Демо-клієнт",
-    "phone": "+380000000001",
-    "email": "demo@example.com",
-    "status": "Новий",
-    "tags": "demo,import",
-    "comment": "Приклад із data.json",
-    "date": "2025-11-03T10:00:00Z",
-    "updatedAt": "2025-11-03T10:00:00Z"
-  }
-]
+{
+  "latest": "2.1.0",
+  "files": [
+    {
+      "version": "2.1.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v2.1.0.mmur",
+      "sha256": "",
+      "notes": "MILACRM бренд, дизайн-панель, анімований фон, редагування/видалення, заповнені «Розширені», +5 фіч."
+    }
+  ]
+}
+
