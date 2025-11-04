@@ -1,14 +1,16 @@
 {
-  "latest": "1.9.0",
+  "latest": "2.0.0",
   "files": [
     {
-      "version": "1.9.0",
-      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v1.9.0.mmur",
+      "version": "2.0.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v2.0.0.mmur",
       "sha256": "",
-      "notes": "Clean UI, приховане посилання на індекс, онлайн-синхронізація (pull+експорт)."
+      "notes": "Аккаунт, канбан, інлайн-редактура, undo/redo, збережені перегляди, notifications, експорт JSON/CSV, автоперевірка оновлень, редизайн."
     }
   ]
 }
+
+
 
 
 
