@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="app-version" content="3.0.0" />
+  <meta name="app-version" content="3.1.0" />
   <title>MILACRM</title>
 
   <style>
@@ -11,7 +11,7 @@
       --acc:#6a7dff; --btn:#273076; --btnH:#3a47a2; --btn2:#0f1530;
       --bg:#0f1426; --card:#141a33; --text:#e7ecff; --muted:#a9b3d9;
       --border:#262c4d; --input:#0f1530; --pill:#1a2140;
-      --radius:14px; --fs:14px; --density:1;
+      --radius:14px; --fs:14px; --density:1; --shadow-a:0.0;
     }
     [data-theme="light"]{
       --bg:#f6f8ff; --card:#ffffff; --text:#1b2340; --muted:#5a6590;
@@ -19,12 +19,14 @@
     }
     html,body{height:100%;font-size:var(--fs)}
     *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,Arial}
-    .container{max-width:1100px;margin:18px auto;padding:0 14px}
+    body{margin:0;background:var(--bg);color:var(--text);
+         font:14px/1.45 system-ui,Segoe UI,Roboto,Arial;
+         text-shadow:0 1px 0 rgba(0,0,0,var(--shadow-a));}
+    .container{max-width:1200px;margin:18px auto;padding:0 14px}
     header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
     h1{font-size:20px;margin:0}
     .pill{display:inline-flex;gap:6px;align-items:center;background:var(--pill);border:1px solid var(--border);border-radius:999px;padding:6px 10px}
-    .tabs{display:flex;gap:8px;margin-left:auto}
+    .tabs{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
     .tabs button{border:1px solid var(--border);background:#161d3a;color:var(--text);border-radius:12px;padding:8px 12px;cursor:pointer}
     .tabs button.active{outline:2px solid var(--acc)}
     .topbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#11183a;border:1px solid #2a356b;border-radius:14px;padding:8px 10px;margin-bottom:12px}
@@ -35,6 +37,7 @@
     .btn[disabled]{opacity:.55;cursor:not-allowed}
     .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
     .section{display:none}.section.active{display:block}
     input,select,textarea{width:100%;background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px;color:var(--text)}
     label{font-size:12px;color:var(--muted)}
@@ -57,6 +60,11 @@
     /* Progress */
     .progress{height:6px;background:#0f1530;border:1px solid #1c2350;border-radius:999px;overflow:hidden}
     .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4b64ff,#7a8cff)}
+    /* Overlay lock */
+    #lockOverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:20}
+    #lockBox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;max-width:360px;width:92%}
+    /* Vault table */
+    #vaultTable td,#vaultTable th{padding:6px 8px;border-bottom:1px solid var(--border)}
   </style>
 
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -66,12 +74,13 @@
   <div class="container">
     <header>
       <h1 id="appTitle">MILACRM</h1>
-      <span class="pill">версія: <b id="currentVersion">v3.0.0</b></span>
+      <span class="pill">версія: <b id="currentVersion">v3.1.0</b></span>
       <div class="tabs">
         <button id="tabForm" class="active">Ліди</button>
         <button id="tabSettings">Налаштування</button>
         <button id="tabAdvanced">Розширені</button>
         <button id="tabAccount">Обліковий запис</button>
+        <button id="tabAdmin" class="hidden">Адмін-панель</button>
         <button id="tabTraining">Навчання</button>
         <button id="themeToggleBtn">Тема</button>
       </div>
@@ -80,7 +89,7 @@
     <!-- Верхній тулбар оновлень -->
     <div class="topbar" id="mwTopbar">
       <span class="status-dot"></span><b>MILACRM</b>
-      <span class="pill" id="currentVersionWrap">версія: <b id="verTxt">v3.0.0</b></span>
+      <span class="pill">версія: <b id="verTxt">v3.1.0</b></span>
       <span style="flex:1"></span>
       <button class="btn" id="btnCheckOnline">Пошук оновлення</button>
       <button class="btn" id="btnPickFile">Обрати файл</button>
@@ -98,10 +107,13 @@
             <button class="btn btn-secondary" id="bulkDeleteBtn">🗑 Масово видалити</button>
             <button class="btn" id="expJsonBtn">⬇ JSON</button>
             <button class="btn" id="expCsvBtn">⬇ CSV</button>
+            <button class="btn" id="impJsonBtn">⬆ Імпорт JSON</button>
+            <input id="impFile" type="file" accept=".json" class="hidden">
             <button class="btn" id="seedDemo">Заповнити демо</button>
             <button class="btn" id="showLog">Журнал дій</button>
             <button class="btn" id="checkDup">Перевірити дублікати</button>
             <button class="btn" id="toggleCols">Поля таблиці</button>
+            <button class="btn btn-secondary" id="openTrash">Кошик</button>
           </div>
         </div>
         <div class="card">
@@ -175,6 +187,9 @@
           <div><label>Анімований фон</label>
             <select id="dpAnimBg"><option value="on" selected>Увімкнено</option><option value="off">Вимкнено</option></select>
           </div>
+          <div><label>Контраст тексту</label>
+            <input id="dpContrast" type="range" min="0" max="0.4" step="0.05" value="0.1">
+          </div>
         </div>
         <div style="display:flex;gap:8px;margin-top:10px">
           <button class="btn" id="dpApply">Застосувати</button>
@@ -207,11 +222,12 @@
 
       <div class="grid" style="margin-top:12px" id="advOps">
         <div class="card" id="advArchive">
-          <h2>Архів</h2>
-          <div class="muted">Перемістити виділені ліди до архіву й переглядати архів.</div>
+          <h2>Архів / Кошик</h2>
+          <div class="muted">Перемістити виділені ліди до архіву, перегляд/відновлення, очищення.</div>
           <div style="display:flex;gap:8px;margin-top:6px">
             <button class="btn" id="toArchiveBtn">→ В архів</button>
             <button class="btn btn-secondary" id="viewArchiveBtn">Відкрити архів</button>
+            <button class="btn btn-secondary" id="emptyTrashBtn">Очистити кошик</button>
           </div>
         </div>
         <div class="card" id="advDup">
@@ -234,19 +250,46 @@
       </div>
     </section>
 
-    <!-- ОБЛІКОВИЙ ЗАПИС -->
+    <!-- ОБЛІКОВИЙ ЗАПИС + VAULT -->
     <section id="accountSection" class="section card">
       <h2>Обліковий запис</h2>
       <div class="grid">
         <div><label>Логін</label><input id="accUser" placeholder="username"></div>
         <div><label>Пароль</label><input id="accPass" type="password" placeholder="пароль"></div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
         <button class="btn" id="accCreate">Створити акаунт</button>
         <button class="btn btn-secondary" id="accLogin">Увійти</button>
         <button class="btn btn-secondary" id="accLogout">Вийти</button>
+        <button class="btn" id="accShowRecovery">Показати Recovery Key</button>
+        <button class="btn" id="accResetByRecovery">Відновити за Recovery Key</button>
       </div>
       <div id="accInfo" class="muted" style="margin-top:8px"></div>
+
+      <div class="card" id="vaultCard" style="margin-top:12px;display:none">
+        <h2>Vault (захищені записи)</h2>
+        <div class="grid">
+          <div><label>Назва</label><input id="vLabel"></div>
+          <div><label>Логін</label><input id="vLogin"></div>
+          <div><label>Пароль</label><input id="vPassword" type="password"></div>
+          <div><label>Нотатка</label><input id="vNote"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" id="vaultAdd">Додати в Vault</button>
+          <button class="btn btn-secondary" id="vaultReload">Оновити список</button>
+        </div>
+        <div style="margin-top:10px">
+          <table id="vaultTable"><thead><tr><th>Назва</th><th>Логін</th><th>Пароль</th><th>Нотатка</th><th></th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="muted" style="margin-top:6px">* Дані шифруються AES-GCM локально. Зробіть бекап браузера.</div>
+      </div>
+    </section>
+
+    <!-- АДМІН-ПАНЕЛЬ -->
+    <section id="adminSection" class="section card hidden">
+      <h2>Адмін-панель</h2>
+      <div class="muted">Керування користувачами, ролями та сесіями</div>
+      <div style="margin-top:8px" id="adminUsers"></div>
     </section>
 
     <!-- НАВЧАННЯ -->
@@ -261,6 +304,19 @@
 
   <div id="toast" class="hidden">OK</div>
 
+  <!-- Lock overlay -->
+  <div id="lockOverlay">
+    <div id="lockBox">
+      <h3>Сесія заблокована</h3>
+      <div class="muted">Введіть пароль акаунта, щоб продовжити</div>
+      <input id="lockPwd" type="password" placeholder="Пароль" style="margin-top:8px;width:100%">
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="lockUnlock">Розблокувати</button>
+      </div>
+      <div id="lockMsg" class="muted" style="margin-top:6px"></div>
+    </div>
+  </div>
+
   <script>
   (function(){
     const $=s=>document.querySelector(s);
@@ -268,7 +324,7 @@
     const toast=t=>{const el=$('#toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2200);};
 
     // ===== Навігація по вкладках =====
-    const sections={tabForm:'formSection',tabSettings:'settingsSection',tabAdvanced:'advancedFeaturesSection',tabAccount:'accountSection',tabTraining:'trainingSection'};
+    const sections={tabForm:'formSection',tabSettings:'settingsSection',tabAdvanced:'advancedFeaturesSection',tabAccount:'accountSection',tabAdmin:'adminSection',tabTraining:'trainingSection'};
     Object.keys(sections).forEach(id=>{
       const btn=$('#'+id);
       btn?.addEventListener('click',()=>{
@@ -278,15 +334,16 @@
         $('#'+sections[id])?.classList.add('active');
       });
     });
-    $('#btnGoTraining')?.addEventListener('click',()=>{
-      $$('#tabTraining')[0]?.click();
-    });
+    $('#btnGoTraining')?.addEventListener('click',()=>$('#tabTraining')?.click());
 
-    // ===== Тема =====
+    // ===== Тема + фон + контраст =====
     const themeBtn=$('#themeToggleBtn');
     const savedTheme=localStorage.getItem('theme')||'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    document.body.classList.toggle('mw-anim-bg', (localStorage.getItem('mw_anim_bg')||'on')==='on');
+    const animPref=(localStorage.getItem('mw_anim_bg')||'on')==='on';
+    document.body.classList.toggle('mw-anim-bg', animPref);
+    const savedShadow=parseFloat(localStorage.getItem('mw_shadow_a')||'0.1');
+    document.documentElement.style.setProperty('--shadow-a', savedShadow.toString());
     themeBtn?.addEventListener('click', ()=>{
       const cur=document.documentElement.getAttribute('data-theme');
       const next=cur==='light'?'dark':'light';
@@ -297,14 +354,14 @@
     // ===== SW (офлайн) =====
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(()=>{}); }
 
-    // ===== Ліди CRUD =====
-    const leadsKey='leads';
-    const loadLeads=()=>{ try{return JSON.parse(localStorage.getItem(leadsKey)||'[]');}catch(e){return []} };
-    const saveLeads=(a)=>localStorage.setItem(leadsKey, JSON.stringify(a));
-    const renderTable=()=>{
+    // ===== Дані лідів =====
+    const LEADS='leads', TRASH='leads_trash', ARCH='leads_archive';
+    const load = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch(e){return d} };
+    const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+    function renderTable(){
       const q=($('#searchInput')?.value||'').trim().toLowerCase();
       const tb=$('#leadsTable tbody'); tb.innerHTML='';
-      loadLeads().filter(l=>{
+      load(LEADS).filter(l=>{
         const hay=[l.name,l.phone,l.email,l.status,l.tags].map(x=>(x||'').toLowerCase()).join('|');
         return !q || hay.includes(q);
       }).forEach(l=>{
@@ -324,29 +381,29 @@
           </td>`;
         tb.appendChild(tr);
       });
-    };
+    }
     window.renderTable=renderTable;
 
     $('#leadForm')?.addEventListener('submit', (e)=>{
       e.preventDefault();
-      const leads=loadLeads();
-      const id = Date.now();
+      const leads=load(LEADS);
+      const id=Date.now();
       const get=v=>$('#'+v).value.trim();
       leads.push({
         id, name:get('name'), phone:get('phone'), email:get('email'),
         status:$('#status').value, tags:get('tags'), comment:get('comment'),
         date: new Date().toISOString(), updatedAt: new Date().toISOString()
       });
-      saveLeads(leads); renderTable(); toast('Лід додано'); e.target.reset();
+      save(LEADS, leads); renderTable(); toast('Лід додано'); e.target.reset();
     });
 
-    // Редагувати / Видалити / Масове видалення
+    // Редагувати/Видалити/Масове/Кошик
     document.addEventListener('click',(e)=>{
       const editBtn=e.target.closest('.editBtn');
       const delBtn=e.target.closest('.delBtn');
       if(editBtn){
         const id=Number(editBtn.dataset.id);
-        const a=loadLeads(); const i=a.findIndex(x=>x.id===id); if(i<0) return;
+        const a=load(LEADS); const i=a.findIndex(x=>x.id===id); if(i<0) return;
         const l=a[i];
         const name=prompt('Імʼя:', l.name||''); if(name===null) return;
         const phone=prompt('Телефон:', l.phone||''); if(phone===null) return;
@@ -355,27 +412,45 @@
         const tags=prompt('Теги (через кому):', l.tags||''); if(tags===null) return;
         const comment=prompt('Коментар:', l.comment||''); if(comment===null) return;
         a[i]={...l,name,phone,email,status,tags,comment,updatedAt:new Date().toISOString()};
-        saveLeads(a); renderTable(); toast('Змінено'); return;
+        save(LEADS,a); renderTable(); toast('Змінено'); return;
       }
       if(delBtn){
         const id=Number(delBtn.dataset.id);
-        if(!confirm('Видалити лід #' + id + '?')) return;
-        let a=loadLeads(); a=a.filter(x=>x.id!==id); saveLeads(a); renderTable(); toast('Видалено'); return;
+        if(!confirm('Перемістити лід #' + id + ' у кошик?')) return;
+        let a=load(LEADS); const rec=a.find(x=>x.id===id); a=a.filter(x=>x.id!==id); save(LEADS,a);
+        const trash=load(TRASH); trash.push({...rec, deletedAt:new Date().toISOString()}); save(TRASH,trash);
+        renderTable(); toast('Переміщено у кошик'); return;
       }
     });
     $('#bulkDeleteBtn')?.addEventListener('click',()=>{
       const checked=$$('#leadsTable tbody .sel:checked'); if(!checked.length){toast('Не обрано'); return;}
-      if(!confirm('Видалити обрані ('+checked.length+')?'))return;
-      let a=loadLeads(); const ids=new Set(checked.map(cb=>Number(cb.dataset.id)));
-      a=a.filter(x=>!ids.has(x.id)); saveLeads(a); renderTable(); toast('Видалено '+ids.size);
+      if(!confirm('Перемістити обрані ('+checked.length+') у кошик?'))return;
+      let a=load(LEADS); const ids=new Set(checked.map(cb=>Number(cb.dataset.id)));
+      const moving=a.filter(x=>ids.has(x.id)); a=a.filter(x=>!ids.has(x.id)); save(LEADS,a);
+      const trash=load(TRASH); save(TRASH, trash.concat(moving.map(x=>({...x,deletedAt:new Date().toISOString()}))));
+      renderTable(); toast('Переміщено: '+ids.size);
+    });
+    $('#openTrash')?.addEventListener('click',()=>{
+      const t=load(TRASH);
+      const out=t.slice(-10).map(x=>`#${x.id}: ${x.name||''} (${x.deletedAt})`).join('\n') || 'Порожньо';
+      const id=prompt('Кошик (останні 10)\n'+out+'\n\nВкажіть ID для відновлення (або порожньо):');
+      if(!id) return;
+      const num=Number(id);
+      let trash=load(TRASH); const rec=trash.find(x=>x.id===num); if(!rec){toast('Не знайдено'); return;}
+      trash=trash.filter(x=>x.id!==num); save(TRASH,trash);
+      const a=load(LEADS); a.push(rec); save(LEADS,a); renderTable(); toast('Відновлено #'+num);
+    });
+    $('#emptyTrashBtn')?.addEventListener('click',()=>{
+      if(!confirm('Очистити кошик? Дію не можна скасувати.')) return;
+      localStorage.removeItem(TRASH); toast('Кошик очищено');
     });
     $('#bulkInProgressBtn')?.addEventListener('click', ()=>{
-      const leads=loadLeads();
+      const leads=load(LEADS);
       $$('#leadsTable tbody .sel:checked').forEach(cb=>{
         const id=Number(cb.dataset.id); const i=leads.findIndex(l=>l.id===id);
         if(i>-1) leads[i].status='В обробці';
       });
-      saveLeads(leads); renderTable(); toast('Статус оновлено');
+      save(LEADS,leads); renderTable(); toast('Статус оновлено');
     });
     $('#searchInput')?.addEventListener('input', renderTable);
     $('#quickChips')?.addEventListener('click', e=>{
@@ -383,18 +458,25 @@
       $('#searchInput').value=tag; $('#searchInput').dispatchEvent(new Event('input'));
     });
 
-    // Експорт JSON/CSV
+    // Експорт/Імпорт
     $('#expJsonBtn')?.addEventListener('click',()=>{
-      const data=JSON.stringify(loadLeads(),null,2);
+      const data=JSON.stringify(load(LEADS),null,2);
       const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
       const a=document.createElement('a'); a.href=url; a.download='leads.json'; a.click(); URL.revokeObjectURL(url);
     });
     $('#expCsvBtn')?.addEventListener('click',()=>{
-      const arr=loadLeads(); const head=['id','name','phone','email','status','tags','comment'];
+      const arr=load(LEADS); const head=['id','name','phone','email','status','tags','comment'];
       const rows=[head.join(',')].concat(arr.map(l=>head.map(k=>(''+(l[k]??'')).replace(/\"/g,'\"\"')).map(x=>`\"${x}\"`).join(',')));
-      const csv=rows.join('\n');
-      const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+      const csv=rows.join('\n'); const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
       const a=document.createElement('a'); a.href=url; a.download='leads.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+    $('#impJsonBtn')?.addEventListener('click',()=>$('#impFile')?.click());
+    $('#impFile')?.addEventListener('change', async (e)=>{
+      const f=e.target.files?.[0]; if(!f) return;
+      try{ const text=await f.text(); const arr=JSON.parse(text); if(!Array.isArray(arr)) throw 0;
+        const cur=load(LEADS); save(LEADS, cur.concat(arr)); renderTable(); toast('Імпорт виконано');
+      }catch{ toast('Невірний файл імпорту'); }
+      e.target.value='';
     });
 
     // Демодані, журнал, дублікати, колонки
@@ -406,13 +488,11 @@
         {id:now+1,name:'Ірина',phone:'+38000000001',email:'irina@example.com',status:'Новий',tags:'facebook',comment:'цікавилась демо',date:new Date().toISOString(),updatedAt:new Date().toISOString()},
         {id:now+2,name:'Олег',phone:'+38000000002',email:'oleg@example.com',status:'В обробці',tags:'email',comment:'потрібен прайс',date:new Date().toISOString(),updatedAt:new Date().toISOString()}
       ];
-      const a=loadLeads(); saveLeads(a.concat(demo)); renderTable(); toast('Демодані додано');
+      const a=load(LEADS); save(LEADS,a.concat(demo)); renderTable(); toast('Демодані додано');
     });
-    $('#showLog')?.addEventListener('click',()=>{
-      alert('Останні дії:\n'+MW_LOG.slice(-10).map(x=>new Date(x.t).toLocaleTimeString('uk-UA')+' — '+x.m).join('\n'));
-    });
+    $('#showLog')?.addEventListener('click',()=>alert('Останні дії:\n'+MW_LOG.slice(-10).map(x=>new Date(x.t).toLocaleTimeString('uk-UA')+' — '+x.m).join('\n')));
     $('#checkDup')?.addEventListener('click',()=>{
-      const a=loadLeads(); const map=new Set();
+      const a=load(LEADS); const map=new Set();
       const dups=a.filter(l=>{const k=((l.email||'')+'|'+(l.phone||'')).toLowerCase(); if(map.has(k)) return true; map.add(k); return false;});
       alert('Дублікатів: '+dups.length);
     });
@@ -425,104 +505,211 @@
       });
     });
 
-    // Валідація
-    $('#email')?.addEventListener('input', e=>{
-      const v=e.target.value.trim();
-      const ok=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)||v==='';
-      e.target.classList.toggle('input-err',!ok);
-    });
-    $('#phone')?.addEventListener('input', e=>{
-      const v=e.target.value.trim();
-      const ok=/^[+0-9()\-\s]{6,}$/.test(v)||v==='';
-      e.target.classList.toggle('input-err',!ok);
-    });
-
-    // Канбан
-    (function kanban(){
-      const kb=$('#kanban'); if(!kb) return;
-      const cols=['Новий','В обробці','Закритий','Відхилений'];
-      cols.forEach(c=>{
-        const col=document.createElement('div'); col.className='col'; col.dataset.status=c;
-        col.innerHTML=`<h3>${c}</h3>`; col.ondragover=e=>e.preventDefault();
-        col.ondrop=e=>{const id=e.dataTransfer.getData('text/plain'); move(Number(id),c); draw();};
-        kb.appendChild(col);
-      });
-      const leads=()=>loadLeads();
-      const save=v=>saveLeads(v);
-      function move(id,status){const a=leads(); const i=a.findIndex(x=>x.id===id); if(i>-1){a[i].status=status; save(a); renderTable();}}
-      function card(l){const d=document.createElement('div'); d.className='cardx'; d.draggable=true;
-        d.ondragstart=e=>{e.dataTransfer.setData('text/plain', String(l.id));};
-        d.innerHTML=`<b>${l.name||'Без назви'}</b><br><span class='muted'>${l.phone||''} ${l.email||''}</span>`;
-        return d;
-      }
-      function draw(){
-        $$('#kanban .col').forEach(c=>{
-          c.querySelectorAll('.cardx').forEach(n=>n.remove());
-          leads().filter(l=>l.status===c.dataset.status).forEach(l=>c.appendChild(card(l)));
+    // ===== Статистика =====
+    function drawCharts(){
+      try{
+        const a=load(LEADS); const byStatus={'Новий':0,'В обробці':0,'Закритий':0,'Відхилений':0};
+        a.forEach(l=>{ if(byStatus[l.status]!=null) byStatus[l.status]++; });
+        new Chart(document.getElementById('chartStatusPie'),{
+          type:'pie', data:{labels:Object.keys(byStatus), datasets:[{data:Object.values(byStatus)}]}, options:{plugins:{legend:{position:'bottom'}}}
         });
-      }
-      draw();
-    })();
+        const days={}; a.forEach(l=>{ const d=(l.date||'').slice(0,10); if(!d) return; days[d]=(days[d]||0)+1; });
+        new Chart(document.getElementById('chartByDay'),{
+          type:'line', data:{labels:Object.keys(days), datasets:[{data:Object.values(days), tension:.3}]}, options:{plugins:{legend:{display:false}}}
+        });
+      }catch(e){}
+    }
 
-    // Архів / Дублікати / Кастомні поля
-    const loadArch=()=>{ try{return JSON.parse(localStorage.getItem('leads_archive')||'[]')}catch(e){return []} };
-    $('#toArchiveBtn')?.addEventListener('click',()=>{
-      const ids=Array.from($$('#leadsTable tbody .sel:checked')).map(cb=>Number(cb.dataset.id));
-      if(!ids.length){toast('Нічого не обрано');return;}
-      let a=loadLeads(); const moving=a.filter(x=>ids.includes(x.id)); a=a.filter(x=>!ids.includes(x.id)); saveLeads(a);
-      const arch=loadArch(); localStorage.setItem('leads_archive', JSON.stringify(arch.concat(moving)));
-      renderTable(); toast('В архів: '+moving.length);
-    });
-    $('#viewArchiveBtn')?.addEventListener('click',()=>{
-      const arch=loadArch(); alert('У архіві записів: '+arch.length);
-    });
-    $('#findDupBtn')?.addEventListener('click',()=>{
-      const a=loadLeads();
-      const key=(l)=> (l.email||'').toLowerCase()+'|'+(l.phone||'').replace(/\D/g,'');
-      const map=new Map(); const dups=[];
-      a.forEach(l=>{const k=key(l); if(map.has(k)) dups.push([map.get(k),l]); else map.set(k,l);});
-      if(!dups.length){toast('Дублікатів не знайдено');return;}
-      alert('Знайдено дублікатів: '+dups.length+' (див. консоль)'); console.log('DUPLICATES', dups);
-    });
-    $('#addCFBtn')?.addEventListener('click',()=>{
-      const n=($('#cfName')?.value||'').trim(); if(!n){toast('Назва поля?');return;}
-      const wrap=document.createElement('div'); wrap.style.gridColumn='1 / -1'; wrap.innerHTML=`<label>${n}</label><input id="cf_${n}">`;
-      $('#leadForm')?.append(wrap); toast('Поле додано');
-    });
+    // ===== Акаунти/Ролі/Сесії та VAULT з шифруванням =====
+    const ACCS='accounts', SESS='acct_session';
+    const VAULT = u => 'vault_'+u; // зашифрований JSON
+    // Base64 helpers
+    const b64 = { enc:u8=>btoa(String.fromCharCode(...u8)), dec:b=>Uint8Array.from(atob(b),c=>c.charCodeAt(0)) };
+    // Crypto helpers
+    async function sha256Hex(text){ const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+    async function kdf(password, salt){ const key=await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+      return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:120000, hash:'SHA-256'}, key, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']); }
+    async function aesEncJson(key, obj){ const iv=crypto.getRandomValues(new Uint8Array(12));
+      const data=new TextEncoder().encode(JSON.stringify(obj));
+      const ct= new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv}, key, data));
+      return {iv:b64.enc(iv), ct:b64.enc(ct)};
+    }
+    async function aesDecJson(key, pack){ const iv=b64.dec(pack.iv), ct=b64.dec(pack.ct);
+      const pt= new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv}, key, ct));
+      return JSON.parse(new TextDecoder().decode(pt));
+    }
+    async function genDataKey(){ return crypto.getRandomValues(new Uint8Array(32)); } // raw 256-bit
+    async function wrapRaw(raw, key){ return aesEncJson(key, {raw:b64.enc(raw)}); }
+    async function unwrapRaw(pack, key){ const obj=await aesDecJson(key, pack); return b64.dec(obj.raw); }
 
-    // Хоткеї
-    document.addEventListener('keydown',e=>{
-      if(e.key==='/' && !e.target.closest('input,textarea')){e.preventDefault(); $('#searchInput')?.focus();}
-      if((e.key==='n'||e.key==='N') && !e.target.closest('input,textarea')){e.preventDefault(); $('#name')?.focus();}
-      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){e.preventDefault(); $('#leadForm')?.dispatchEvent(new Event('submit',{cancelable:true})); toast('Збережено');}
-      if(e.shiftKey && e.key==='Delete'){ e.preventDefault(); $('#bulkDeleteBtn')?.click(); }
-    });
+    function getAccounts(){ return load(ACCS,[]); }
+    function setAccounts(a){ save(ACCS,a); }
+    function getSession(){ return load(SESS,null); }
+    function setSession(s){ save(SESS,s); }
 
-    // Обліковий запис (локальний)
-    async function sha256(t){const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join('');}
-    function setGateUI(isIn){ $('#settingsSection')?.classList.toggle('hidden',!isIn); $('#advancedFeaturesSection')?.classList.toggle('hidden',!isIn); }
+    function ensureAdminTab(){ const sess=getSession(); const acc=getAccounts().find(x=>x.u===sess?.u); $('#tabAdmin')?.classList.toggle('hidden', !(acc && acc.role==='admin')); }
+    function uiGate(){ const logged=!!getSession(); $('#settingsSection')?.classList.toggle('hidden',!logged); $('#advancedFeaturesSection')?.classList.toggle('hidden',!logged); $('#vaultCard')?.style.setProperty('display', logged?'block':'none'); ensureAdminTab(); }
+    uiGate();
+
+    // Створення акаунта
     $('#accCreate')?.addEventListener('click', async ()=>{
-      const u=$('#accUser').value.trim(); const p=$('#accPass').value; if(!u||!p){toast('Логін і пароль');return;}
-      const salt=(Math.random().toString(36)+Date.now().toString(36)).slice(0,12);
-      const hash=await sha256(p+salt);
-      localStorage.setItem('acct', JSON.stringify({u,salt,hash}));
-      localStorage.setItem('acct_session', JSON.stringify({u,ts:Date.now()}));
-      $('#accInfo').textContent='Акаунт створено і увійдено'; setGateUI(true);
+      const u=$('#accUser').value.trim(); const p=$('#accPass').value; if(!u||!p) {toast('Логін і пароль'); return;}
+      let A=getAccounts(); if(A.find(x=>x.u===u)){ toast('Такий логін вже існує'); return; }
+      const salt=b64.enc(crypto.getRandomValues(new Uint8Array(16)));
+      const salt2=b64.enc(crypto.getRandomValues(new Uint8Array(16)));
+      const pwHash=await sha256Hex(p + salt);
+      const kPw = await kdf(p, b64.dec(salt));
+      const kRecBase = [...crypto.getRandomValues(new Uint8Array(24))].map(b=>('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')[b%32]).join('');
+      const kRec = await kdf(kRecBase, b64.dec(salt2));
+      const dataKey = await genDataKey();
+      const wrappedPW = await wrapRaw(dataKey, kPw);
+      const wrappedRK = await wrapRaw(dataKey, kRec);
+      const role = A.length===0 ? 'admin' : 'user';
+      A.push({u, role, salt, salt2, pwHash, wrappedPW, wrappedRK, createdAt: Date.now()});
+      setAccounts(A);
+      setSession({u, ts: Date.now()});
+      $('#accInfo').innerHTML = 'Акаунт створено. <b>Збережіть Recovery Key:</b> <code>'+kRecBase+'</code>';
+      uiGate(); toast('Створено і увійдено');
+      renderAdmin();
     });
-    $('#accLogin')?.addEventListener('click', async ()=>{
-      const rec=JSON.parse(localStorage.getItem('acct')||'null'); if(!rec){toast('Спершу створіть акаунт');return;}
-      const u=$('#accUser').value.trim(); const p=$('#accPass').value; const hash=await sha256(p+rec.salt);
-      if(rec.u===u && rec.hash===hash){ localStorage.setItem('acct_session', JSON.stringify({u,ts:Date.now()})); $('#accInfo').textContent='Вхід успішний'; setGateUI(true); }
-      else $('#accInfo').textContent='Невірні дані';
-    });
-    $('#accLogout')?.addEventListener('click', ()=>{
-      localStorage.removeItem('acct_session'); $('#accInfo').textContent='Вихід виконано'; setGateUI(false);
-    });
-    setGateUI(!!localStorage.getItem('acct_session'));
 
-    // Налаштування дизайну
-    const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-    const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+    // Вхід
+    $('#accLogin')?.addEventListener('click', async ()=>{
+      const u=$('#accUser').value.trim(); const p=$('#accPass').value;
+      const rec=getAccounts().find(x=>x.u===u); if(!rec){ toast('Немає такого користувача'); return; }
+      const ok = (await sha256Hex(p + rec.salt)) === rec.pwHash;
+      if(!ok){ $('#accInfo').textContent='Невірні дані'; return; }
+      setSession({u, ts:Date.now()}); $('#accInfo').textContent='Вхід успішний'; uiGate(); renderAdmin();
+    });
+
+    // Вихід
+    $('#accLogout')?.addEventListener('click', ()=>{ localStorage.removeItem(SESS); uiGate(); $('#accInfo').textContent='Вихід виконано'; });
+
+    // Показ Recovery Key (вимагає логіну)
+    $('#accShowRecovery')?.addEventListener('click', async ()=>{
+      const sess=getSession(); if(!sess){ toast('Спершу увійдіть'); return; }
+      const rec=getAccounts().find(x=>x.u===sess.u); if(!rec){ toast('Акаунт не знайдено'); return; }
+      alert('Recovery Key (зберігайте в безпечному місці):\n' +
+        '(цей ключ генерується під час створення і зберігається лише як обгортка; '+
+        'якщо загублено — створіть новий акаунт і перенесіть дані)\n\n*Поточний ключ недоступний у чистому вигляді для перегляду.\n' +
+        'Створіть резервний дублікат при створенні акаунта.');
+    });
+
+    // Відновлення за Recovery Key (перевидача пароля без втрати даних Vault)
+    $('#accResetByRecovery')?.addEventListener('click', async ()=>{
+      const u=prompt('Вкажіть логін акаунта:'); if(!u) return;
+      const rec=getAccounts().find(x=>x.u===u); if(!rec){ toast('Немає такого користувача'); return; }
+      const rk=prompt('Введіть Recovery Key:'); if(!rk) return;
+      const newPwd=prompt('Новий пароль:'); if(!newPwd) return;
+      try{
+        const kRec=await kdf(rk, b64.dec(rec.salt2));
+        const dataKeyRaw = await unwrapRaw(rec.wrappedRK, kRec);
+        const kNew = await kdf(newPwd, b64.dec(rec.salt));
+        const wrappedPW = await wrapRaw(dataKeyRaw, kNew);
+        const pwHash=await sha256Hex(newPwd + rec.salt);
+        rec.wrappedPW = wrappedPW; rec.pwHash=pwHash;
+        setAccounts(getAccounts().map(a=>a.u===u?rec:a));
+        toast('Пароль оновлено'); $('#accInfo').textContent='Пароль скинуто за Recovery Key';
+      }catch(e){ toast('Невірний Recovery Key'); }
+    });
+
+    // ===== VAULT (шифрований) =====
+    async function vaultGetDataKey(u, password){
+      const rec=getAccounts().find(x=>x.u===u); if(!rec) throw 'no user';
+      const kPw = await kdf(password, b64.dec(rec.salt));
+      const raw = await unwrapRaw(rec.wrappedPW, kPw);
+      // повертаємо CryptoKey для шифрування/дешифру
+      return await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt','decrypt']);
+    }
+    async function vaultLoad(u, key){
+      try{ const pack=load(VAULT(u), null); if(!pack) return [];
+        return await aesDecJson(key, pack);
+      }catch(e){ return []; }
+    }
+    async function vaultSave(u, key, arr){
+      const pack = await aesEncJson(key, arr);
+      save(VAULT(u), pack);
+    }
+    async function vaultRender(){
+      const sess=getSession(); if(!sess) return;
+      const pwd=$('#accPass').value; if(!pwd) return; // для першого показу введіть пароль у полі
+      try{
+        const key=await vaultGetDataKey(sess.u, pwd);
+        const arr=await vaultLoad(sess.u, key);
+        const tb=$('#vaultTable tbody'); tb.innerHTML='';
+        (arr||[]).forEach((v,i)=>{
+          const tr=document.createElement('tr');
+          tr.innerHTML=`<td>${v.label||''}</td><td>${v.login||''}</td><td>${v.password||''}</td><td>${v.note||''}</td>
+                        <td><button class="btn btn-secondary" data-i="${i}" data-act="vdel">🗑</button></td>`;
+          tb.appendChild(tr);
+        });
+      }catch(e){ /* ignore */ }
+    }
+    $('#vaultReload')?.addEventListener('click', vaultRender);
+    $('#vaultAdd')?.addEventListener('click', async ()=>{
+      const sess=getSession(); if(!sess){ toast('Спершу увійдіть'); return; }
+      const pwd=$('#accPass').value; if(!pwd){ toast('Введіть пароль у полі вище'); return; }
+      try{
+        const key=await vaultGetDataKey(sess.u, pwd);
+        const arr=await vaultLoad(sess.u, key);
+        arr.push({label:$('#vLabel').value, login:$('#vLogin').value, password:$('#vPassword').value, note:$('#vNote').value, ts:Date.now()});
+        await vaultSave(sess.u, key, arr);
+        $('#vLabel').value=$('#vLogin').value=$('#vPassword').value=$('#vNote').value='';
+        toast('Додано у Vault'); vaultRender();
+      }catch(e){ toast('Помилка доступу до Vault'); }
+    });
+    document.addEventListener('click', async (e)=>{
+      const b=e.target.closest('button[data-act="vdel"]'); if(!b) return;
+      const i=Number(b.dataset.i);
+      const sess=getSession(); if(!sess) return;
+      const pwd=$('#accPass').value; if(!pwd) return;
+      try{ const key=await vaultGetDataKey(sess.u, pwd);
+        const arr=await vaultLoad(sess.u, key); arr.splice(i,1); await vaultSave(sess.u, key, arr); toast('Видалено'); vaultRender();
+      }catch{}
+    });
+
+    // ===== Адмін-панель =====
+    function renderAdmin(){
+      const sess=getSession(); const acc=getAccounts().find(x=>x.u===sess?.u);
+      $('#tabAdmin')?.classList.toggle('hidden', !(acc && acc.role==='admin'));
+      if(!(acc && acc.role==='admin')) return;
+      const box=$('#adminUsers'); const A=getAccounts();
+      box.innerHTML = '<table><thead><tr><th>Логін</th><th>Роль</th><th>Створено</th><th>Дії</th></tr></thead><tbody>'+
+        A.map(u=>`<tr><td>${u.u}</td><td>${u.role}</td><td>${new Date(u.createdAt).toLocaleString('uk-UA')}</td>
+        <td>
+          <button class="btn btn-secondary" data-act="role" data-u="${u.u}">${u.role==='admin'?'Зробити user':'Зробити admin'}</button>
+          <button class="btn btn-secondary" data-act="logout" data-u="${u.u}">Вийти з сесії</button>
+          <button class="btn" data-act="deluser" data-u="${u.u}">Видалити</button>
+        </td></tr>`).join('') + '</tbody></table>';
+    }
+    document.addEventListener('click',(e)=>{
+      const el=e.target.closest('button[data-act]'); if(!el) return;
+      const act=el.dataset.act, user=el.dataset.u;
+      if(act==='role'){ const A=getAccounts(); const i=A.findIndex(x=>x.u===user); if(i<0)return; A[i].role = (A[i].role==='admin'?'user':'admin'); setAccounts(A); toast('Роль змінено'); renderAdmin(); ensureAdminTab(); }
+      if(act==='logout'){ const s=getSession(); if(s?.u===user) localStorage.removeItem(SESS); toast('Сесію очищено'); }
+      if(act==='deluser'){ if(!confirm('Видалити користувача '+user+'?')) return;
+        setAccounts(getAccounts().filter(x=>x.u!==user)); localStorage.removeItem(VAULT(user)); toast('Видалено'); renderAdmin(); ensureAdminTab(); uiGate();
+      }
+    });
+
+    // ===== Автоблокування сесії =====
+    let idleTimer=null;
+    function armIdle(){ clearTimeout(idleTimer); idleTimer=setTimeout(()=>lockNow(), 10*60*1000); } // 10 хв
+    ['click','keydown','mousemove','scroll'].forEach(ev=>document.addEventListener(ev, armIdle, {passive:true}));
+    armIdle();
+    function lockNow(){ $('#lockOverlay').style.display='flex'; }
+    $('#lockUnlock')?.addEventListener('click', async ()=>{
+      const sess=getSession(); if(!sess){ $('#lockOverlay').style.display='none'; return; }
+      const pass=$('#lockPwd').value; const rec=getAccounts().find(x=>x.u===sess.u); if(!rec) return;
+      const ok = (await sha256Hex(pass + rec.salt)) === rec.pwHash;
+      if(ok){ $('#lockOverlay').style.display='none'; $('#lockPwd').value=''; armIdle(); }
+      else { $('#lockMsg').textContent='Невірний пароль'; }
+    });
+
+    // ===== Налаштування дизайну (застосування/пресети/контраст) =====
+    const setCfg=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+    const getCfg=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
     function applyDesign(cfg){
       if(cfg.accent) document.documentElement.style.setProperty('--acc',cfg.accent);
       if(cfg.font) document.documentElement.style.setProperty('--fs',cfg.font+'px');
@@ -530,28 +717,31 @@
       const anim = cfg.animBg!==undefined ? cfg.animBg : true;
       document.body.classList.toggle('mw-anim-bg', !!anim);
       localStorage.setItem('mw_anim_bg', anim ? 'on' : 'off');
+      if(cfg.shadowA!==undefined){
+        document.documentElement.style.setProperty('--shadow-a', String(cfg.shadowA));
+        localStorage.setItem('mw_shadow_a', String(cfg.shadowA));
+      }
     }
-    const cfg0=get('mw_design_cfg',{accent:'#6a7dff',font:14,density:'normal',animBg:true});
-    $('#dpAccent').value=cfg0.accent; $('#dpFont').value=String(cfg0.font); $('#dpDensity').value=cfg0.density; $('#dpAnimBg').value=cfg0.animBg?'on':'off'; applyDesign(cfg0);
+    const cfg0=getCfg('mw_design_cfg',{accent:'#6a7dff',font:14,density:'normal',animBg:true,shadowA:parseFloat(localStorage.getItem('mw_shadow_a')||'0.1')});
+    $('#dpAccent').value=cfg0.accent; $('#dpFont').value=String(cfg0.font); $('#dpDensity').value=cfg0.density; $('#dpAnimBg').value=cfg0.animBg?'on':'off'; $('#dpContrast').value=cfg0.shadowA;
+    applyDesign(cfg0);
     $('#dpApply').addEventListener('click', ()=>{
-      const cfg={accent:$('#dpAccent').value,font:Number($('#dpFont').value),density:$('#dpDensity').value,animBg:$('#dpAnimBg').value==='on'};
-      set('mw_design_cfg',cfg); applyDesign(cfg); toast('Дизайн застосовано');
+      const cfg={accent:$('#dpAccent').value,font:Number($('#dpFont').value),density:$('#dpDensity').value,animBg:$('#dpAnimBg').value==='on',shadowA:parseFloat($('#dpContrast').value)};
+      setCfg('mw_design_cfg',cfg); applyDesign(cfg); toast('Дизайн застосовано');
     });
     $('#dpReset').addEventListener('click', ()=>{
-      const def={accent:'#6a7dff',font:14,density:'normal',animBg:true}; set('mw_design_cfg',def); applyDesign(def); toast('Повернуто за замовчуванням');
+      const def={accent:'#6a7dff',font:14,density:'normal',animBg:true,shadowA:0.1}; setCfg('mw_design_cfg',def); applyDesign(def); toast('Повернуто за замовчуванням');
     });
-    $('#presetDark').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); const c=get('mw_design_cfg',{accent:'#6a7dff',font:14,density:'normal',animBg:true}); c.accent='#6a7dff'; c.animBg=true; set('mw_design_cfg',c); applyDesign(c);});
-    $('#presetLight').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','light'); localStorage.setItem('theme','light'); const c=get('mw_design_cfg',{accent:'#3b5bff',font:14,density:'normal',animBg:false}); c.accent='#3b5bff'; c.animBg=false; set('mw_design_cfg',c); applyDesign(c);});
-    $('#presetMinecraft').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); const c=get('mw_design_cfg',{accent:'#6aa84f',font:14,density:'normal',animBg:false}); c.accent='#6aa84f'; c.animBg=false; set('mw_design_cfg',c); applyDesign(c);});
+    $('#presetDark').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); const c=getCfg('mw_design_cfg',cfg0); c.accent='#6a7dff'; c.animBg=true; setCfg('mw_design_cfg',c); applyDesign(c);});
+    $('#presetLight').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','light'); localStorage.setItem('theme','light'); const c=getCfg('mw_design_cfg',cfg0); c.accent='#3b5bff'; c.animBg=false; setCfg('mw_design_cfg',c); applyDesign(c);});
+    $('#presetMinecraft').addEventListener('click', ()=>{document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); const c=getCfg('mw_design_cfg',cfg0); c.accent='#6aa84f'; c.animBg=false; setCfg('mw_design_cfg',c); applyDesign(c);});
 
-    // Онлайн-оновлення (спрощене, із вбудованим URL)
+    // ===== Онлайн-оновлення: лише остання версія або статус "у вас остання" =====
     const INDEX_HARD='https://nikobo101.github.io/milawebos-site/updates/index.json';
-    const urlInput=$('#updIndexUrlSimple');
-    urlInput.value=localStorage.getItem('updatesIndexURL')||INDEX_HARD;
+    const urlInput=$('#updIndexUrlSimple'); urlInput.value=localStorage.getItem('updatesIndexURL')||INDEX_HARD;
     urlInput.addEventListener('change',()=>localStorage.setItem('updatesIndexURL', urlInput.value.trim()));
     $('#btnCheckOnline')?.addEventListener('click',()=>$('#updCheck')?.click());
     const prog=(n)=>$('#updProg').style.width=n+'%';
-    async function sha256Text(t){const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join('');}
     async function fetchIndex(){
       const url=(urlInput.value||'').trim(); if(!url){toast('Вкажіть URL'); return null;}
       const r=await fetch(url,{cache:'no-store'}); if(!r.ok){toast('Помилка запиту'); return null;}
@@ -559,7 +749,14 @@
     }
     $('#updCheck')?.addEventListener('click', async ()=>{
       const idx=await fetchIndex(); if(!idx) return; prog(60);
-      $('#updResult').textContent='Знайдено: остання версія v'+(idx.latest||'?'); $('#updInstallLatest').disabled=!idx.latest;
+      const cur=document.querySelector('meta[name="app-version"]').content||'0';
+      if(idx.latest && idx.latest>cur){
+        $('#updResult').textContent='Доступне оновлення v'+idx.latest;
+        $('#updInstallLatest').disabled=false;
+      }else{
+        $('#updResult').textContent='У вас остання версія ('+cur+')';
+        $('#updInstallLatest').disabled=true;
+      }
       localStorage.setItem('mw_last_index', JSON.stringify(idx)); prog(100);
     });
     $('#updInstallLatest')?.addEventListener('click', async ()=>{
@@ -583,6 +780,7 @@
       }catch(e){ toast('Невірний файл'); }
     });
 
+    async function sha256Text(t){const d=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join('');}
     async function installFromURL(meta){
       try{
         prog(15); const r=await fetch(meta.url,{cache:'no-store'}); if(!r.ok){toast('Не вдалося завантажити'); prog(0); return;}
@@ -591,7 +789,6 @@
         const mf=JSON.parse(text); applyPatch(mf); prog(100); $('#updResult').textContent='Встановлено v'+mf.version;
       }catch(e){ toast('Помилка встановлення'); prog(0); }
     }
-
     function applyPatch(mf){
       try{
         if(mf.patch?.css){ const s=document.createElement('style'); s.textContent=mf.patch.css; document.head.appendChild(s); }
@@ -599,33 +796,14 @@
         if(mf.patch?.title){ $('#appTitle').textContent=mf.patch.title; document.title=mf.patch.title; }
         if(mf.version){
           document.querySelector('meta[name="app-version"]').content=mf.version;
-          $('#currentVersion').textContent = 'v'+mf.version; $('#verTxt').textContent='v'+mf.version;
+          $('#currentVersion').textContent='v'+mf.version; $('#verTxt').textContent='v'+mf.version;
         }
-        const arr=JSON.parse(localStorage.getItem('appliedPatches')||'[]');
-        arr.push({version:mf.version, patch:mf.patch});
-        localStorage.setItem('appliedPatches', JSON.stringify(arr));
+        const arr=load('appliedPatches',[]); arr.push({version:mf.version, patch:mf.patch}); save('appliedPatches',arr);
       }catch(e){ toast('Помилка застосування'); }
     }
 
-    // Статистика (проста ініціалізація)
-    function drawCharts(){
-      try{
-        const a=loadLeads(); const byStatus={'Новий':0,'В обробці':0,'Закритий':0,'Відхилений':0};
-        a.forEach(l=>{ if(byStatus[l.status]!=null) byStatus[l.status]++; });
-        const pie=new Chart(document.getElementById('chartStatusPie'),{
-          type:'pie', data:{labels:Object.keys(byStatus), datasets:[{data:Object.values(byStatus)}]}, options:{plugins:{legend:{position:'bottom'}}}
-        });
-        const days={}; a.forEach(l=>{ const d=(l.date||'').slice(0,10); if(!d) return; days[d]=(days[d]||0)+1; });
-        const line=new Chart(document.getElementById('chartByDay'),{
-          type:'line', data:{labels:Object.keys(days), datasets:[{data:Object.values(days), tension:.3}]}, options:{plugins:{legend:{display:false}}}
-        });
-      }catch(e){}
-    }
-
-    // Ініціалізація
-    renderTable(); drawCharts();
-
-    // За замовчуванням — якщо індексу нема, підставляємо вбудований
+    // ===== Ініціалізація =====
+    renderTable(); drawCharts(); renderAdmin(); uiGate();
     if(!localStorage.getItem('updatesIndexURL')) localStorage.setItem('updatesIndexURL', INDEX_HARD);
   })();
   </script>
