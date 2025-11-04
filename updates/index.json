@@ -1,26 +1,28 @@
 {
-  "latest": "3.3.0",
+  "latest": "3.4.0",
   "files": [
+    {
+      "version": "3.4.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.4.0.mmur",
+      "sha256": "",
+      "notes": "Майстер-асистент, фон-зображення/parallax/Minecraft-анім, панель перевірок, прибрано кнопку теми і URL індексу, 20+ фіч."
+    },
     {
       "version": "3.3.0",
       "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.3.0.mmur",
       "sha256": "",
-      "notes": "Minecraft+ кубічний стиль, детальні налаштування, адмін-панель з компаніями/групами/токенами, 20+ нових фіч, неонова Futurism."
+      "notes": "Minecraft+ тема, детальний тюнінг, адмін-панель компаній/груп."
     },
     {
       "version": "3.2.0",
       "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.2.0.mmur",
       "sha256": "",
       "notes": "Опції CRM у шторці, «Забув пароль», онлайн-сховище (AES-GCM)."
-    },
-    {
-      "version": "3.1.0",
-      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.1.0.mmur",
-      "sha256": "",
-      "notes": "Ролі, Recovery Key, Vault, автоблокування, апдейтер."
     }
   ]
 }
+
+
 
 
 
