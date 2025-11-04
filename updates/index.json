@@ -1,20 +1,22 @@
 {
-  "latest": "3.6.0",
+  "latest": "3.7.0",
   "files": [
+    {
+      "version": "3.7.0",
+      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.7.0.mmur",
+      "sha256": "",
+      "notes": "Навчання перекриває UI; AI-панель пересувна з діями; повний i18n UA/EN; кошик-іконка; бокове меню; NeonGlass; 20 нових фіч."
+    },
     {
       "version": "3.6.0",
       "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.6.0.mmur",
       "sha256": "",
-      "notes": "Автотренажер (сам вводить/клікає/озвучує), AI-помічник (BYO-AI або локальний), UI polish."
-    },
-    {
-      "version": "3.5.0",
-      "url": "https://nikobo101.github.io/milawebos-site/updates/MilaWEBOS_update_v3.5.0.mmur",
-      "sha256": "",
-      "notes": "Fix навчання, логін/відновлення, мобільна версія, i18n UA/EN, Gist-хмара."
+      "notes": "Автотренажер (вводить/клікає/озвучує), AI Assistant (BYO/локальний)."
     }
   ]
 }
+
+
 
 
 
